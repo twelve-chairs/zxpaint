@@ -21,8 +21,8 @@ bool initSDL();
 bool loadBMP();
 void exitSDL();
 
-SDL_Window* mainWindow = nullptr;
-SDL_Surface* mainSurface = nullptr;
-SDL_Surface* bmpImage = nullptr;
+SDL_Window *mainWindow = nullptr;
+SDL_Surface *mainSurface = nullptr;
+SDL_Surface *bmpImage = nullptr;
 
 #endif //SDL2TEST_MAIN_H

@@ -18,7 +18,7 @@ bool initSDL() {
                 mainSurface = SDL_GetWindowSurface(mainWindow);
                 return true;
             }
-            catch (const std::exception &) {
+            catch (const std::exception&) {
                 std::cout << SDL_GetError() << std::endl;
                 return false;
             }
