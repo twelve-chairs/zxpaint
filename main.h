@@ -10,10 +10,10 @@
 #include <vector>
 #include <string>
 #include <random>
-#include <boost/filesystem.hpp>
+//#include <boost/log/trivial.hpp>
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 const int MAX_SCREEN_WIDTH = 320;
 const int MAX_SCREEN_HEIGHT = 240;
