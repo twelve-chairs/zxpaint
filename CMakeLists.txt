@@ -10,10 +10,9 @@ set(Boost_USE_STATIC_RUNTIME     OFF)
 
 find_package(SDL2 REQUIRED)
 find_package(nlohmann_json REQUIRED)
-find_package(Boost 1.67 REQUIRED COMPONENTS log)
+find_package(Boost REQUIRED COMPONENTS log)
 
 include_directories(${SDL2_INCLUDE_DIRS})
-include_directories(${Boost_INCLUDE_DIRS})
 
 add_executable(SDL2Test main.cpp main.h)
 
