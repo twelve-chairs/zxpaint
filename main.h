@@ -5,13 +5,13 @@
 #ifndef SDL2TEST_MAIN_H
 #define SDL2TEST_MAIN_H
 
-#include <SDL.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <random>
-//#include <boost/log/trivial.hpp>
+#include <spdlog/spdlog.h>
 #include <nlohmann/json.hpp>
+#include <SDL.h>
 
 //using json = nlohmann::json;
 

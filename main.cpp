@@ -4,14 +4,14 @@
 bool initSDL() {
     try {
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-//            BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+            spdlog::error(SDL_GetError());
             return false;
         }
 
         mainWindow = SDL_CreateWindow("Twelve Chairs Software", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                       MAX_SCREEN_WIDTH, MAX_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (mainWindow == nullptr) {
-//            BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+            spdlog::error(SDL_GetError());
             return false;
         } else {
             try {
@@ -19,13 +19,13 @@ bool initSDL() {
                 return true;
             }
             catch (const std::exception&) {
-//                BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+                spdlog::error(SDL_GetError());
                 return false;
             }
         }
     }
     catch (const std::exception&){
-//        BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+        spdlog::error(SDL_GetError());
         return false;
     }
 }
@@ -34,13 +34,13 @@ bool loadBMP() {
     try {
         bmpImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/nothing.bmp");
         if (bmpImage == nullptr) {
-//            BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+            spdlog::error(SDL_GetError());
             return false;
         }
         return true;
     }
     catch (const std::exception&){
-//        BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+        spdlog::error(SDL_GetError());
         return false;
     }
 }
@@ -56,17 +56,17 @@ void exitSDL(){
         SDL_Quit();
     }
     catch (const std::exception&){
-//        BOOST_LOG_TRIVIAL(error) << SDL_GetError();
+        spdlog::error(SDL_GetError());
     }
 }
 
 int main(int argc, char* args[]){
     try {
         if (!initSDL()) {
-//            BOOST_LOG_TRIVIAL(error) << "Failed to initialize SDL!";
+            spdlog::error(SDL_GetError());
         } else {
             if (!loadBMP()) {
-//                BOOST_LOG_TRIVIAL(error) << "Failed to load media!";
+                spdlog::error(SDL_GetError());
             } else {
                 bool mainLoopRunning = true;
 
@@ -100,6 +100,6 @@ int main(int argc, char* args[]){
         return 0;
     }
     catch (const std::exception &e){
-//        BOOST_LOG_TRIVIAL(error) << "General error: " << e.what();
+        spdlog::error("General error: {}", e.what());
     }
 }
