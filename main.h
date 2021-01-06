@@ -24,7 +24,7 @@ void exitSDL();
 int randomInteger(int to, int from = 0);
 
 SDL_Window *mainWindow = nullptr;
-SDL_Texture *mainTexture = nullptr;
+SDL_Texture *bmpTexture = nullptr;
 SDL_Renderer *mainRender = nullptr;
 SDL_Surface *bmpImage = nullptr;
 

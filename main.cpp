@@ -29,8 +29,8 @@ bool initSDL() {
 
 void exitSDL(){
     try {
-        SDL_DestroyTexture(mainTexture);
-        mainTexture = nullptr;
+        SDL_DestroyTexture(bmpTexture);
+        bmpTexture = nullptr;
         SDL_DestroyRenderer(mainRender);
         mainRender = nullptr;
         SDL_DestroyWindow(mainWindow);
@@ -62,13 +62,13 @@ int main(int argc, char* args[]){
 
             SDL_ShowCursor(1);
 
+            bmpImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/nothing.bmp");
+            bmpTexture = SDL_CreateTextureFromSurface(mainRender, bmpImage);
+            SDL_FreeSurface(bmpImage);
+
             SDL_Rect destinationRect;
             destinationRect.h = 20;
             destinationRect.w = 20;
-
-            bmpImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/nothing.bmp");
-            mainTexture = SDL_CreateTextureFromSurface(mainRender, bmpImage);
-            SDL_FreeSurface(bmpImage);
 
             while (mainLoopRunning) {
                 // Get events for main loop
@@ -79,7 +79,7 @@ int main(int argc, char* args[]){
                             mainLoopRunning = false;
                             break;
                         case SDL_WINDOWEVENT:
-                            if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+                            if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
                                 MAX_SCREEN_WIDTH = e.window.data1;
                                 MAX_SCREEN_HEIGHT = e.window.data2;
                             }
@@ -103,7 +103,7 @@ int main(int argc, char* args[]){
                 int temp_y = randomInteger(MAX_SCREEN_HEIGHT);
 
                 SDL_RenderDrawLine(mainRender, destinationRect.x, destinationRect.y, temp_x, temp_y);
-                SDL_RenderCopy(mainRender, mainTexture, nullptr, &destinationRect);
+                SDL_RenderCopy(mainRender, bmpTexture, nullptr, &destinationRect);
                 SDL_RenderPresent(mainRender);
                 SDL_Delay(50);
             }
