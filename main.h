@@ -6,6 +6,7 @@
 #define SDL2TEST_MAIN_H
 
 #include <iostream>
+#include <ctime>
 #include <vector>
 #include <string>
 #include <random>
@@ -15,15 +16,17 @@
 
 //using json = nlohmann::json;
 
-const int MAX_SCREEN_WIDTH = 320;
-const int MAX_SCREEN_HEIGHT = 240;
+int MAX_SCREEN_WIDTH = 320;
+int MAX_SCREEN_HEIGHT = 240;
 
 bool initSDL();
-bool loadBMP();
 void exitSDL();
+int randomInteger(int to, int from = 0);
 
 SDL_Window *mainWindow = nullptr;
-SDL_Surface *mainSurface = nullptr;
+SDL_Texture *mainTexture = nullptr;
+SDL_Renderer *mainRender = nullptr;
 SDL_Surface *bmpImage = nullptr;
+
 
 #endif //SDL2TEST_MAIN_H
