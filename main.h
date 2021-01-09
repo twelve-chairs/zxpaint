@@ -13,6 +13,8 @@
 #include <spdlog/spdlog.h>
 #include <nlohmann/json.hpp>
 #include <SDL.h>
+#include "common.h"
+#include "StarFish.h"
 
 //using json = nlohmann::json;
 
@@ -21,12 +23,15 @@ int MAX_SCREEN_HEIGHT = 240;
 
 bool initSDL();
 void exitSDL();
-int randomInteger(int to, int from = 0);
 
 SDL_Window *mainWindow = nullptr;
-SDL_Texture *bmpTexture = nullptr;
+SDL_Texture *bitmapTexture = nullptr;
 SDL_Renderer *mainRender = nullptr;
-SDL_Surface *bmpImage = nullptr;
+
+Uint64 firstTick;
+Uint64 startTick;
+Uint64 lastTick;
+int frameCount;
 
 
 #endif //SDL2TEST_MAIN_H

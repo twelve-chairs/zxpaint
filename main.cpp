@@ -14,7 +14,7 @@ bool initSDL() {
             return false;
         }
 
-        mainRender = SDL_CreateRenderer(mainWindow, -1, 0);
+        mainRender = SDL_CreateRenderer(mainWindow, 0, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
         if (mainRender == nullptr) {
             spdlog::error(SDL_GetError());
             return false;
@@ -29,8 +29,8 @@ bool initSDL() {
 
 void exitSDL(){
     try {
-        SDL_DestroyTexture(bmpTexture);
-        bmpTexture = nullptr;
+        SDL_DestroyTexture(bitmapTexture);
+        bitmapTexture = nullptr;
         SDL_DestroyRenderer(mainRender);
         mainRender = nullptr;
         SDL_DestroyWindow(mainWindow);
@@ -43,34 +43,43 @@ void exitSDL(){
     }
 }
 
-int randomInteger(int to, int from){
-    std::random_device randomizerSeed;
-    std::default_random_engine randomEngine(randomizerSeed());
-    std::uniform_int_distribution<int> randomRange(from, to);
-    return randomRange(randomEngine);
+
+Uint64 checkFrame(Uint64 end){
+    return end - startTick;
+}
+
+Uint64 checkFrame(Uint64 end, Uint64 start){
+    return end - start;
 }
 
 int main(int argc, char* args[]){
     try {
+        firstTick = SDL_GetPerformanceCounter();
+        startTick = SDL_GetPerformanceCounter();
+        lastTick = startTick;
+        frameCount = 1;
+
+        bool mainLoopRunning = true;
+
         if (!initSDL()) {
             spdlog::error(SDL_GetError());
         }
         else {
-            bool mainLoopRunning = true;
-
             SDL_Event e;
 
             SDL_ShowCursor(1);
 
-            bmpImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/nothing.bmp");
-            bmpTexture = SDL_CreateTextureFromSurface(mainRender, bmpImage);
-            SDL_FreeSurface(bmpImage);
+            SDL_Rect bitmapLayer = {0, 0, MAX_SCREEN_WIDTH, MAX_SCREEN_HEIGHT};
+            SDL_Surface *bitmapImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/nothing.bmp");
+            bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
+            SDL_FreeSurface(bitmapImage);
+            SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 255);
+            SDL_RenderClear(mainRender);
 
-            SDL_Rect destinationRect;
-            destinationRect.h = 20;
-            destinationRect.w = 20;
+            StarFish newStar;
 
             while (mainLoopRunning) {
+                startTick = SDL_GetPerformanceCounter();
                 // Get events for main loop
                 while (SDL_PollEvent(&e) != 0) {
                     switch (e.type){
@@ -82,6 +91,10 @@ int main(int argc, char* args[]){
                             if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
                                 MAX_SCREEN_WIDTH = e.window.data1;
                                 MAX_SCREEN_HEIGHT = e.window.data2;
+
+
+                                bitmapLayer.w = MAX_SCREEN_WIDTH;
+                                bitmapLayer.h = MAX_SCREEN_HEIGHT;
                             }
                             break;
                         case SDL_KEYDOWN:
@@ -89,23 +102,30 @@ int main(int argc, char* args[]){
                     }
                 }
 
-                destinationRect.x = randomInteger(MAX_SCREEN_WIDTH);
-                destinationRect.y = randomInteger(MAX_SCREEN_HEIGHT);
-
-                // Clear screen with color
-                SDL_SetRenderDrawColor(mainRender, 255, 255, 255, 255);
+                // IMPORTANT: clear render
+                SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 0);
                 SDL_RenderClear(mainRender);
 
-                // Set line color
-                SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 255);
+                // Set background image
+                SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
 
-                int temp_x = randomInteger(MAX_SCREEN_WIDTH);
-                int temp_y = randomInteger(MAX_SCREEN_HEIGHT);
+                newStar.width = 100;
+                newStar.height = 100;
 
-                SDL_RenderDrawLine(mainRender, destinationRect.x, destinationRect.y, temp_x, temp_y);
-                SDL_RenderCopy(mainRender, bmpTexture, nullptr, &destinationRect);
+                //Top-left
+                newStar.animation(mainRender, 0, newStar.width, 0, newStar.height);
+                //Top-right
+                newStar.animation(mainRender, MAX_SCREEN_WIDTH-newStar.width, (MAX_SCREEN_WIDTH-newStar.width) + newStar.width, 0, newStar.height);
+                //Bottom-left
+                newStar.animation(mainRender, 0, newStar.width, MAX_SCREEN_HEIGHT-newStar.height, MAX_SCREEN_HEIGHT);
+                //Bottom-right
+                newStar.animation(mainRender, MAX_SCREEN_WIDTH-newStar.width, MAX_SCREEN_WIDTH,  MAX_SCREEN_HEIGHT-newStar.height, MAX_SCREEN_HEIGHT);
+
                 SDL_RenderPresent(mainRender);
-                SDL_Delay(50);
+
+                lastTick = SDL_GetPerformanceCounter();
+                float elapsedMS = (float)(lastTick - startTick) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+                spdlog::info(elapsedMS);
             }
         }
 
