@@ -4,7 +4,7 @@
 ## Intro
 A work-in-progress open source project to emulate the ZX Spectrum's screen drawing capabilities, in the style of a simple image manipulation editor. Includes realistic pixel dimensions, and proper attribute-based color schemes.
 
-![](image.png)
+![](https://github.com/twelvechairssoftware/zxpaint/raw/master/zxpaint.png)
 
 Uses the following open source C/C++ libraries:
  - SDL2 (https://www.libsdl.org)
