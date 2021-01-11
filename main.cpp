@@ -7,7 +7,7 @@ bool initSDL() {
             return false;
         }
 
-        mainWindow = SDL_CreateWindow("ZX-paint - Twelve Chairs Software", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        mainWindow = SDL_CreateWindow("ZX-Paint (alpha) - Twelve Chairs Software, LLC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                       maxScreenWidth, maxScreenHeight, SDL_WINDOW_RESIZABLE);
         if (mainWindow == nullptr){
             spdlog::error(SDL_GetError());
