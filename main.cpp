@@ -45,7 +45,7 @@ void exitSDL(){
 
 void rightMenu(SDL_Renderer* parentRenderer){
     SDL_Rect fillRect = {maxScreenWidth - 160, 0, 160, maxScreenHeight};
-    SDL_SetRenderDrawColor(parentRenderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(parentRenderer, 255, 255, 255, SDL_ALPHA_TRANSPARENT);
     SDL_RenderFillRect(parentRenderer, &fillRect);
 }
 
@@ -88,10 +88,10 @@ void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
                     SDL_SetRenderDrawColor(parentRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
                     SDL_RenderFillRect(parentRenderer, &fillRect);
                 } else {
-                    if (pixelSize >= 4) {
+//                    if (pixelSize >= 4) {
                         SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
                         SDL_RenderDrawRect(parentRenderer, &fillRect);
-                    }
+//                    }
                 }
             }
         }
@@ -156,12 +156,17 @@ int main(int argc, char* args[]){
             SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
 
-            memset(pixels, 0, sizeof pixels);
-            memset(attributes, 0, sizeof attributes);
-            memset(pixels, 0, 191*255*sizeof pixels[0][0]);
-            memset(pixels, 0, 191*255*sizeof(uint8_t));
-            memset(attributes, 0, 23*31*sizeof attributes[0][0]);
-//            StarFish newStar;
+            memset(pixels, 1, sizeof pixels);
+//            memset(attributes, 1, sizeof attributes);
+//            memset(pixels, 1, 191*255*sizeof pixels[0][0]);
+//            memset(pixels, 1, 191*255*sizeof(uint8_t));
+//            memset(attributes, 1, 23*31*sizeof attributes[0][0]);
+
+            for (auto each: pixels){
+                spdlog::info("0: {}", each);
+                spdlog::info("1: {}", each[1]);
+                spdlog::info("1: {}", each[2]);
+            }
 
             while (mainLoopRunning) {
                 startTick = SDL_GetPerformanceCounter();
