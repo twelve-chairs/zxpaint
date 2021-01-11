@@ -5,7 +5,6 @@
 #ifndef SDL2TEST_STARFISH_H
 #define SDL2TEST_STARFISH_H
 
-#include <SDL.h>
 #include "common.h"
 
 class StarFish {
