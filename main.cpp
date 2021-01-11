@@ -45,14 +45,14 @@ void exitSDL(){
 
 void rightMenu(SDL_Renderer* parentRenderer){
     SDL_Rect fillRect = {maxScreenWidth - 160, 0, 160, maxScreenHeight};
-    SDL_SetRenderDrawColor(parentRenderer, 255, 255, 255, SDL_ALPHA_TRANSPARENT);
+    SDL_SetRenderDrawColor(parentRenderer, 215, 215, 215, SDL_ALPHA_TRANSPARENT);
     SDL_RenderFillRect(parentRenderer, &fillRect);
 }
 
 void colorSelector(SDL_Renderer* parentRenderer){
     int colorWidth = 50;
     int colorHeight = 50;
-    int allColors = (colorHeight * 7);
+    int allColors = (colorHeight * 8);
 
     int startingPositionX = maxScreenWidth - 130;
     int startingPositionY = (maxScreenHeight - allColors) - 20;
@@ -95,7 +95,6 @@ void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
                 }
             }
         }
-
 
         //Major ticks
         rows = (sizeof attributes / sizeof attributes[0]) + 1;
@@ -156,11 +155,7 @@ int main(int argc, char* args[]){
             SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
 
-            memset(pixels, 1, sizeof pixels);
-//            memset(attributes, 1, sizeof attributes);
-//            memset(pixels, 1, 191*255*sizeof pixels[0][0]);
-//            memset(pixels, 1, 191*255*sizeof(uint8_t));
-//            memset(attributes, 1, 23*31*sizeof attributes[0][0]);
+            memset(pixels, 0, sizeof pixels);
 
             for (auto each: pixels){
                 spdlog::info("0: {}", each);
@@ -217,13 +212,10 @@ int main(int argc, char* args[]){
                 }
 
                 // IMPORTANT: clear render
-                SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
+                SDL_SetRenderDrawColor(mainRender, colorPalette1[7].r, colorPalette1[7].g, colorPalette1[7].b, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(mainRender);
                 memset(pixels, 0, sizeof pixels);
-                memset(attributes, 0, sizeof attributes);
-                memset(pixels, 0, 191*255*sizeof pixels[0][0]);
-                memset(pixels, 0, 191*255*sizeof(uint8_t));
-                memset(attributes, 0, 23*31*sizeof attributes[0][0]);
+
                 // Set background image
 //                SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
 
