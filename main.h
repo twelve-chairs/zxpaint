@@ -14,8 +14,8 @@ int maxScreenWidth = 1000;
 int maxScreenHeight = 760;
 
 bool showGrid = true;
-static int pixelSize = 4;
-static int attributeSize = pixelSize * 8;
+int pixelSize = 4;
+int attributeSize = pixelSize * 8;
 
 bool initSDL();
 void exitSDL();
@@ -59,9 +59,9 @@ rgb colorPalette1[] = {
 };
 
 // 256x192 (1x1)
-uint8_t pixels[191][255];
+bool pixels[191][255] = {false};
 
 // 32x24 (8x8)
-uint8_t attributes[23][31];
+bool attributes[23][31] = {false};
 
 #endif //SDL2TEST_MAIN_H

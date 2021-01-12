@@ -79,30 +79,33 @@ void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
     if (showGrid) {
         // Minor ticks
         int rows = (sizeof pixels / sizeof pixels[0]) + 1;
-        int columns = sizeof pixels[0] / sizeof(uint8_t);
+        int columns = sizeof pixels[0] / sizeof(bool);
 
-        for (int x = 0; x < columns * gridSize; x += gridSize) {
-            for (int y = 0; y < rows * gridSize; y += gridSize) {
+        for (int y = 0; y < rows * gridSize; y += gridSize) {
+            for (int x = 0; x < columns * gridSize; x += gridSize) {
                 SDL_Rect fillRect = {x, y, gridSize, gridSize};
+//                pixels[x][y] = false;
                 if (pixels[x][y]) {
                     SDL_SetRenderDrawColor(parentRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
                     SDL_RenderFillRect(parentRenderer, &fillRect);
                 } else {
-//                    if (pixelSize >= 4) {
-                        SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
-                        SDL_RenderDrawRect(parentRenderer, &fillRect);
-//                    }
+                    SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+                    SDL_RenderDrawRect(parentRenderer, &fillRect);
                 }
             }
         }
 
         //Major ticks
         rows = (sizeof attributes / sizeof attributes[0]) + 1;
-        columns = sizeof attributes[0] / sizeof(uint8_t);
+        spdlog::info("Rows major: {}", rows);
+
+        columns = sizeof attributes[0] / sizeof(bool);
+        spdlog::info("Cols minor: {}", columns);
+
         gridSize = gridSize * 8;
 
-        for (int x = 0; x < columns * gridSize; x += gridSize) {
-            for (int y = 0; y < rows * gridSize; y += gridSize) {
+        for (int y = 0; y < rows * gridSize; y += gridSize) {
+            for (int x = 0; x < columns * gridSize; x += gridSize) {
                 SDL_SetRenderDrawColor(parentRenderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
                 SDL_Rect fillRect = {x, y, gridSize, gridSize};
                 SDL_RenderDrawRect(parentRenderer, &fillRect);
@@ -155,13 +158,13 @@ int main(int argc, char* args[]){
             SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
 
-            memset(pixels, 0, sizeof pixels);
+            memset(pixels, false, sizeof pixels);
 
-            for (auto each: pixels){
-                spdlog::info("0: {}", each);
-                spdlog::info("1: {}", each[1]);
-                spdlog::info("1: {}", each[2]);
-            }
+//            for (auto each: pixels){
+//                spdlog::info("0: {}", each);
+//                spdlog::info("1: {}", each[1]);
+//                spdlog::info("1: {}", each[2]);
+//            }
 
             while (mainLoopRunning) {
                 startTick = SDL_GetPerformanceCounter();
@@ -186,10 +189,10 @@ int main(int argc, char* args[]){
                             int x, y;
                             SDL_GetMouseState( &x, &y );
 //                            try {
-                                x = x / pixelSize;
-                                y = y / pixelSize;
-                                pixels[x][y] = 1 - (pixels[x][y]);
-                                spdlog::info("{} x {} = {}", x, y, pixels[x][y]);
+                            x = x / pixelSize;
+                            y = y / pixelSize;
+                            pixels[x][y] = !pixels[x][y];
+                            spdlog::info("{} x {} = {}", x, y, pixels[x][y]);
 //                            }
 //                            catch (std::exception &e) {
 //                                spdlog::error(e);
@@ -202,7 +205,7 @@ int main(int argc, char* args[]){
                             }
                             else if(e.wheel.y < 0) // scroll down
                             {
-                                pixelSize > 2 ? pixelSize-- : pixelSize = 2;
+                                pixelSize > 3 ? pixelSize-- : pixelSize = 3;
                             }
                             attributeSize = pixelSize * 8;
                             break;
@@ -214,7 +217,6 @@ int main(int argc, char* args[]){
                 // IMPORTANT: clear render
                 SDL_SetRenderDrawColor(mainRender, colorPalette1[7].r, colorPalette1[7].g, colorPalette1[7].b, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(mainRender);
-                memset(pixels, 0, sizeof pixels);
 
                 // Set background image
 //                SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
