@@ -4,3 +4,9 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+/misc.xml
+/modules.xml
+/sdl2-tests.iml
+/sonarIssues.xml
+/sonarSettings.xml
+/vcs.xml
