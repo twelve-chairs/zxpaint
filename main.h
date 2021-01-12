@@ -55,6 +55,12 @@ rgb colorPalette1[] = {
         rgb{255, 255, 255} //WHITE1
 };
 
+struct mouseLocation {
+    int x;
+    int y;
+    bool clicked;
+} mouseLocation;
+
 //bool pixels[191][255] = {false};
 std::vector<std::vector<bool>> pixels;
 

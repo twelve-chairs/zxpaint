@@ -44,17 +44,17 @@ void exitSDL(){
 }
 
 void rightMenu(SDL_Renderer* parentRenderer){
-    SDL_Rect fillRect = {maxScreenWidth - 160, 0, 160, maxScreenHeight};
+    SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
     SDL_SetRenderDrawColor(parentRenderer, 215, 215, 215, SDL_ALPHA_TRANSPARENT);
     SDL_RenderFillRect(parentRenderer, &fillRect);
 }
 
 void colorSelector(SDL_Renderer* parentRenderer){
-    int colorWidth = 50;
-    int colorHeight = 50;
+    int colorWidth = 32;
+    int colorHeight = 32;
     int allColors = (colorHeight * 8);
 
-    int startingPositionX = maxScreenWidth - 130;
+    int startingPositionX = maxScreenWidth - 100;
     int startingPositionY = (maxScreenHeight - allColors) - 20;
     int temp_index = 0;
 
@@ -65,7 +65,7 @@ void colorSelector(SDL_Renderer* parentRenderer){
         temp_index++;
     }
 
-    startingPositionX = maxScreenWidth - (130 - colorWidth);
+    startingPositionX = maxScreenWidth - (100 - colorWidth);
     temp_index = 0;
     for (auto color: colorPalette1) {
         SDL_Rect fillRect = {startingPositionX, (temp_index * colorHeight) + startingPositionY, colorWidth, colorHeight};
@@ -119,7 +119,6 @@ int main(int argc, char* args[]){
 
         // 256x192 (1x1)
         pixels = {255, std::vector<bool>(191,false)};
-
         // 32x24 (8x8)
         attributes = {31, std::vector<bool>(23,false)};
 
@@ -159,24 +158,31 @@ int main(int argc, char* args[]){
                             }
                             break;
                         case SDL_MOUSEBUTTONDOWN:
+//                            SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
+                            mouseLocation.clicked = true;
+                            break;
+                        case SDL_MOUSEBUTTONUP:
 //                            showGrid = !showGrid;
-                            int x, y;
-                            SDL_GetMouseState(&x, &y);
-                            x = x / pixelSize;
-                            y = y / pixelSize;
-                            pixels[x][y] = !pixels[x][y];
+                            mouseLocation.clicked = false;
+//                            pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = !pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize];
                             break;
-                        case SDL_MOUSEWHEEL:
-                            if(e.wheel.y > 0) // scroll up
-                            {
-                                pixelSize < 30 ? pixelSize++ : pixelSize = 30;
+                        case SDL_MOUSEMOTION:
+                            SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
+                            if (mouseLocation.clicked){
+                                pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = !pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize];
                             }
-                            else if(e.wheel.y < 0) // scroll down
-                            {
-                                pixelSize > 2 ? pixelSize-- : pixelSize = 2;
-                            }
-                            attributeSize = pixelSize * 8;
-                            break;
+//                        case SDL_MOUSEWHEEL:
+//                            if (!mouseLocation.clicked) {
+//                                if (e.wheel.y > 0) // scroll up
+//                                {
+//                                    pixelSize < 30 ? pixelSize++ : pixelSize = 30;
+//                                } else if (e.wheel.y < 0) // scroll down
+//                                {
+//                                    pixelSize > 2 ? pixelSize-- : pixelSize = 2;
+//                                }
+//                                attributeSize = pixelSize * 8;
+//                            }
+//                            break;
                         case SDL_KEYDOWN:
                             break;
                     }
