@@ -76,53 +76,50 @@ void colorSelector(SDL_Renderer* parentRenderer){
 }
 
 void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
-    if (showGrid) {
-        // Minor ticks
-        int rows = (sizeof pixels / sizeof pixels[0]) + 1;
-        int columns = sizeof pixels[0] / sizeof(bool);
+    try {
+        if (showGrid) {
+            // Minor ticks
+            for (int y = 0; y <= pixels[0].size(); y++) {
+                for (int x = 0; x < pixels.size(); x++) {
+                    SDL_Rect fillRect = {x * gridSize, y * gridSize, gridSize, gridSize};
+                    if (pixels[x][y]) {
+                        SDL_SetRenderDrawColor(parentRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                        SDL_RenderFillRect(parentRenderer, &fillRect);
+                    } else {
+                        SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+                        SDL_RenderDrawRect(parentRenderer, &fillRect);
+                    }
+                }
+            }
 
-        for (int y = 0; y < rows * gridSize; y += gridSize) {
-            for (int x = 0; x < columns * gridSize; x += gridSize) {
-                SDL_Rect fillRect = {x, y, gridSize, gridSize};
-//                pixels[x][y] = false;
-                if (pixels[x][y]) {
-                    SDL_SetRenderDrawColor(parentRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                    SDL_RenderFillRect(parentRenderer, &fillRect);
-                } else {
-                    SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+            //Major ticks
+            int attributeGridSize = gridSize * 8;
+
+            for (int y = 0; y <= attributes[0].size(); y++) {
+                for (int x = 0; x <= attributes.size(); x++) {
+                    SDL_SetRenderDrawColor(parentRenderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
+                    SDL_Rect fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
                     SDL_RenderDrawRect(parentRenderer, &fillRect);
                 }
             }
         }
-
-        //Major ticks
-        rows = (sizeof attributes / sizeof attributes[0]) + 1;
-        spdlog::info("Rows major: {}", rows);
-
-        columns = sizeof attributes[0] / sizeof(bool);
-        spdlog::info("Cols minor: {}", columns);
-
-        gridSize = gridSize * 8;
-
-        for (int y = 0; y < rows * gridSize; y += gridSize) {
-            for (int x = 0; x < columns * gridSize; x += gridSize) {
-                SDL_SetRenderDrawColor(parentRenderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
-                SDL_Rect fillRect = {x, y, gridSize, gridSize};
-                SDL_RenderDrawRect(parentRenderer, &fillRect);
-            }
-        }
+    }
+    catch (std::exception &e){
+        spdlog::error(e.what());
     }
 }
 
 int main(int argc, char* args[]){
-    spdlog::info(sizeof pixels);
-    spdlog::info(sizeof attributes);
 
     try {
-        initialTick = SDL_GetPerformanceCounter();
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
-        frameCount = 1;
+
+        // 256x192 (1x1)
+        pixels = {255, std::vector<bool>(191,false)};
+
+        // 32x24 (8x8)
+        attributes = {31, std::vector<bool>(23,false)};
 
         bool mainLoopRunning = true;
 
@@ -158,7 +155,7 @@ int main(int argc, char* args[]){
             SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
 
-            memset(pixels, false, sizeof pixels);
+//            memset(pixels, false, sizeof pixels);
 
 //            for (auto each: pixels){
 //                spdlog::info("0: {}", each);

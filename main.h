@@ -24,11 +24,8 @@ SDL_Window *mainWindow = nullptr;
 SDL_Texture *bitmapTexture = nullptr;
 SDL_Renderer *mainRender = nullptr;
 
-Uint64 initialTick;
 Uint64 startTick;
 Uint64 endTick;
-int frameCount;
-int zoomLevel = 0;
 
 struct rgb {
     uint8_t r;
@@ -58,10 +55,10 @@ rgb colorPalette1[] = {
         rgb{255, 255, 255} //WHITE1
 };
 
-// 256x192 (1x1)
-bool pixels[191][255] = {false};
+//bool pixels[191][255] = {false};
+std::vector<std::vector<bool>> pixels;
 
-// 32x24 (8x8)
-bool attributes[23][31] = {false};
+//bool attributes[23][31] = {false};
+std::vector<std::vector<bool>> attributes;
 
 #endif //SDL2TEST_MAIN_H
