@@ -86,21 +86,23 @@ void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
                         SDL_SetRenderDrawColor(parentRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
                         SDL_RenderFillRect(parentRenderer, &fillRect);
                     } else {
-                        SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
-                        SDL_RenderDrawRect(parentRenderer, &fillRect);
+                        if (gridSize >= 4) {
+                            SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+                            SDL_RenderDrawRect(parentRenderer, &fillRect);
+                        }
                     }
                 }
             }
+        }
 
-            //Major ticks
-            int attributeGridSize = gridSize * 8;
+        //Major ticks
+        int attributeGridSize = gridSize * 8;
 
-            for (int y = 0; y <= attributes[0].size(); y++) {
-                for (int x = 0; x <= attributes.size(); x++) {
-                    SDL_SetRenderDrawColor(parentRenderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
-                    SDL_Rect fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
-                    SDL_RenderDrawRect(parentRenderer, &fillRect);
-                }
+        for (int y = 0; y <= attributes[0].size(); y++) {
+            for (int x = 0; x <= attributes.size(); x++) {
+                SDL_SetRenderDrawColor(parentRenderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
+                SDL_Rect fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
+                SDL_RenderDrawRect(parentRenderer, &fillRect);
             }
         }
     }
@@ -123,23 +125,6 @@ int main(int argc, char* args[]){
 
         bool mainLoopRunning = true;
 
-
-//        int attr_rows = (sizeof attributes / sizeof attributes[0]);
-//        int attr_columns = sizeof attributes[0] / sizeof(bool);
-//        for (int x = 0; x < attr_columns; x++) {
-//            for (int y = 0; y < attr_rows; y++) {
-//                attributes[x][y] = false;
-//            }
-//        }
-//
-//        int pixel_rows = (sizeof pixels / sizeof pixels[0]);
-//        int pixel_columns = sizeof pixels[0] / sizeof(bool);
-//        for (int x = 0; x < pixel_columns; x++) {
-//            for (int y = 0; y < pixel_rows; y++) {
-//                pixels[x][y] = false;
-//            }
-//        }
-
         if (!initSDL()) {
             spdlog::error(SDL_GetError());
         }
@@ -154,14 +139,6 @@ int main(int argc, char* args[]){
             SDL_FreeSurface(bitmapImage);
             SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
-
-//            memset(pixels, false, sizeof pixels);
-
-//            for (auto each: pixels){
-//                spdlog::info("0: {}", each);
-//                spdlog::info("1: {}", each[1]);
-//                spdlog::info("1: {}", each[2]);
-//            }
 
             while (mainLoopRunning) {
                 startTick = SDL_GetPerformanceCounter();
@@ -184,16 +161,10 @@ int main(int argc, char* args[]){
                         case SDL_MOUSEBUTTONDOWN:
 //                            showGrid = !showGrid;
                             int x, y;
-                            SDL_GetMouseState( &x, &y );
-//                            try {
+                            SDL_GetMouseState(&x, &y);
                             x = x / pixelSize;
                             y = y / pixelSize;
                             pixels[x][y] = !pixels[x][y];
-                            spdlog::info("{} x {} = {}", x, y, pixels[x][y]);
-//                            }
-//                            catch (std::exception &e) {
-//                                spdlog::error(e);
-//                            }
                             break;
                         case SDL_MOUSEWHEEL:
                             if(e.wheel.y > 0) // scroll up
@@ -202,7 +173,7 @@ int main(int argc, char* args[]){
                             }
                             else if(e.wheel.y < 0) // scroll down
                             {
-                                pixelSize > 3 ? pixelSize-- : pixelSize = 3;
+                                pixelSize > 2 ? pixelSize-- : pixelSize = 2;
                             }
                             attributeSize = pixelSize * 8;
                             break;
