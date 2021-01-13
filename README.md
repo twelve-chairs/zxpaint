@@ -2,19 +2,22 @@
 
 
 ## Intro
-A **work-in-progress** open source project to emulate the ZX Spectrum's screen drawing capabilities, in the style of a simple image manipulation editor. Includes realistic pixel dimensions, and proper attribute-based color schemes.
+A **work-in-progress** open source project to emulate the [ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes)'s screen drawing capabilities, in the style of a simple modern image manipulation editor. Includes realistic pixel dimensions, and proper attribute-based color schemes.
 
 ![](https://github.com/twelvechairssoftware/zxpaint/raw/master/zxpaint.png)
 
 ## Roadmap
- 1. Basic pixels ✅
- 2. Selector buttons 🚧
- 3. Pan and Zoom
- 4. Attributes
- 5. Color selection
- 6. Basic shapes (line, circle)
- 7. Text
- 8. Export to file
+1. Basic pixels ✅
+2. Window resizing ✅
+3. Basic zoom in/out ✅
+4. Menu selector buttons 🚧
+5. Attributes
+6. View panning (maybe scroll bars)
+7. Color selection
+8. Basic shapes (line, circle) 🌤️
+9. Shape filling 🌤️
+10. Text 🌤️
+11. Export to file
 
 ## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
