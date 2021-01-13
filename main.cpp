@@ -133,9 +133,11 @@ int main(int argc, char* args[]){
             SDL_ShowCursor(1);
 
             SDL_Rect bitmapLayer = {0, 0, maxScreenWidth, maxScreenHeight};
-            SDL_Surface *bitmapImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/nothing.bmp");
+            SDL_Surface *bitmapImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/images/nothing.bmp");
             bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
             SDL_FreeSurface(bitmapImage);
+
+
             SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
 

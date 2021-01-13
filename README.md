@@ -6,7 +6,17 @@ A **work-in-progress** open source project to emulate the ZX Spectrum's screen d
 
 ![](https://github.com/twelvechairssoftware/zxpaint/raw/master/zxpaint.png)
 
-Uses the following open source C/C++ libraries:
+## Roadmap
+ 1. Basic pixels ✅
+ 2. Selector buttons 🚧
+ 3. Pan and Zoom
+ 4. Attributes
+ 5. Color selection
+ 6. Basic shapes (line, circle)
+ 7. Text
+ 8. Export to file
+
+## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
  - spdlog (https://github.com/gabime/spdlog)
  - nlohmann's JSON (https://github.com/nlohmann/json)
