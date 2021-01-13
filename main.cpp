@@ -43,39 +43,13 @@ void exitSDL(){
     }
 }
 
-void rightMenu(SDL_Renderer* parentRenderer){
+void rightMenu(){
     SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
-    SDL_SetRenderDrawColor(parentRenderer, 215, 215, 215, SDL_ALPHA_TRANSPARENT);
-    SDL_RenderFillRect(parentRenderer, &fillRect);
+    SDL_SetRenderDrawColor(mainRender, 215, 215, 215, SDL_ALPHA_TRANSPARENT);
+    SDL_RenderFillRect(mainRender, &fillRect);
 }
 
-void colorSelector(SDL_Renderer* parentRenderer){
-    int colorWidth = 32;
-    int colorHeight = 32;
-    int allColors = (colorHeight * 8);
-
-    int startingPositionX = maxScreenWidth - 100;
-    int startingPositionY = (maxScreenHeight - allColors) - 20;
-    int temp_index = 0;
-
-    for (auto color: colorPalette0) {
-        SDL_Rect fillRect = {startingPositionX, (temp_index * colorHeight) + startingPositionY, colorWidth, colorHeight};
-        SDL_SetRenderDrawColor(parentRenderer, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(parentRenderer, &fillRect);
-        temp_index++;
-    }
-
-    startingPositionX = maxScreenWidth - (100 - colorWidth);
-    temp_index = 0;
-    for (auto color: colorPalette1) {
-        SDL_Rect fillRect = {startingPositionX, (temp_index * colorHeight) + startingPositionY, colorWidth, colorHeight};
-        SDL_SetRenderDrawColor(parentRenderer, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(parentRenderer, &fillRect);
-        temp_index++;
-    }
-}
-
-void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
+void drawGrid(int gridSize){
     try {
         if (showGrid) {
             // Minor ticks
@@ -83,12 +57,12 @@ void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
                 for (int x = 0; x < pixels.size(); x++) {
                     SDL_Rect fillRect = {x * gridSize, y * gridSize, gridSize, gridSize};
                     if (pixels[x][y]) {
-                        SDL_SetRenderDrawColor(parentRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                        SDL_RenderFillRect(parentRenderer, &fillRect);
+                        SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                        SDL_RenderFillRect(mainRender, &fillRect);
                     } else {
                         if (gridSize >= 4) {
-                            SDL_SetRenderDrawColor(parentRenderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
-                            SDL_RenderDrawRect(parentRenderer, &fillRect);
+                            SDL_SetRenderDrawColor(mainRender, 128, 128, 128, SDL_ALPHA_OPAQUE);
+                            SDL_RenderDrawRect(mainRender, &fillRect);
                         }
                     }
                 }
@@ -100,14 +74,87 @@ void drawGrid(SDL_Renderer* parentRenderer, int gridSize){
 
         for (int y = 0; y <= attributes[0].size(); y++) {
             for (int x = 0; x <= attributes.size(); x++) {
-                SDL_SetRenderDrawColor(parentRenderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
+                SDL_SetRenderDrawColor(mainRender, 20, 20, 20, SDL_ALPHA_OPAQUE);
                 SDL_Rect fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
-                SDL_RenderDrawRect(parentRenderer, &fillRect);
+                SDL_RenderDrawRect(mainRender, &fillRect);
             }
         }
     }
     catch (std::exception &e){
         spdlog::error(e.what());
+    }
+}
+
+void colorSelector(){
+    int allColors = blockSize * (sizeof(colorPalette0)/sizeof(colorPalette0[0]));
+
+    int startingPositionX = maxScreenWidth - 100;
+    int startingPositionY = (maxScreenHeight - allColors) - 20;
+    int temp_index = 0;
+
+    for (auto color: colorPalette0) {
+        SDL_Rect fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
+        SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(mainRender, &fillRect);
+        temp_index++;
+    }
+
+    startingPositionX = maxScreenWidth - (100 - blockSize);
+    temp_index = 0;
+    for (auto color: colorPalette1) {
+        SDL_Rect fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
+        SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(mainRender, &fillRect);
+        temp_index++;
+    }
+}
+
+void loadIcons(){
+    const char *images[5][2] = {
+            {
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_border_color_black_18dp.bmp",
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_format_color_fill_black_18dp.bmp"
+            },
+            {
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_zoom_in_black_18dp.bmp",
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_zoom_out_black_18dp.bmp"
+            },
+            {
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_grid_on_black_18dp.bmp",
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_grid_off_black_18dp.bmp"
+            },
+            {
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_up_black_18dp.bmp",
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_down_black_18dp.bmp"
+            },
+            {
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_left_black_18dp.bmp",
+                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_right_black_18dp.bmp"
+            }
+    };
+
+
+    int index = 0;
+    int subindex;
+    int startingPositionX;
+    int startingPositionY;
+
+    for (const auto &layerIndex: images) {
+        startingPositionX = maxScreenWidth - 100;
+        startingPositionY = 20 + (sizeof(images)/sizeof(images[0]));
+        subindex = 0;
+        for (const auto &image: layerIndex) {
+            if (subindex != 0){
+                startingPositionX = maxScreenWidth - (100 - blockSize);
+            }
+            SDL_Rect bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+            SDL_Surface *bitmapImage = SDL_LoadBMP(image);
+            bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
+            SDL_FreeSurface(bitmapImage);
+            SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
+            subindex++;
+        }
+        index++;
     }
 }
 
@@ -117,9 +164,9 @@ int main(int argc, char* args[]){
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
 
-        // 256x192 (1x1)
+        // 256x192 (1x1) pixels
         pixels = {255, std::vector<bool>(191,false)};
-        // 32x24 (8x8)
+        // 32x24 (8x8) attributes
         attributes = {31, std::vector<bool>(23,false)};
 
         bool mainLoopRunning = true;
@@ -131,12 +178,6 @@ int main(int argc, char* args[]){
             SDL_Event e;
 
             SDL_ShowCursor(1);
-
-            SDL_Rect bitmapLayer = {0, 0, maxScreenWidth, maxScreenHeight};
-            SDL_Surface *bitmapImage = SDL_LoadBMP("/Users/vokamisair/Documents/dev/sdl2/images/nothing.bmp");
-            bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
-            SDL_FreeSurface(bitmapImage);
-
 
             SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
@@ -155,8 +196,8 @@ int main(int argc, char* args[]){
                                 maxScreenWidth = e.window.data1;
                                 maxScreenHeight = e.window.data2;
 
-                                bitmapLayer.w = maxScreenWidth;
-                                bitmapLayer.h = maxScreenHeight;
+//                                bitmapLayer.w = maxScreenWidth;
+//                                bitmapLayer.h = maxScreenHeight;
                             }
                             break;
                         case SDL_MOUSEBUTTONDOWN:
@@ -197,9 +238,10 @@ int main(int argc, char* args[]){
                 // Set background image
 //                SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
 
-                drawGrid(mainRender, pixelSize);
-                rightMenu(mainRender);
-                colorSelector(mainRender);
+                drawGrid(pixelSize);
+                rightMenu();
+                colorSelector();
+                loadIcons();
 
 //                newStar.width = 8;
 //                newStar.height = 8;

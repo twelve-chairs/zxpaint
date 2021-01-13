@@ -67,4 +67,6 @@ std::vector<std::vector<bool>> pixels;
 //bool attributes[23][31] = {false};
 std::vector<std::vector<bool>> attributes;
 
+const int blockSize = 36;
+
 #endif //SDL2TEST_MAIN_H

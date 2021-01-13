@@ -15,7 +15,6 @@
 #include <nlohmann/json.hpp>
 #include <SDL.h>
 
-
 int randomInteger(int to, int from = 0);
 
 
