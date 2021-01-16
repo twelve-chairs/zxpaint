@@ -21,7 +21,6 @@ bool initSDL();
 void exitSDL();
 
 SDL_Window *mainWindow = nullptr;
-SDL_Texture *bitmapTexture = nullptr;
 SDL_Renderer *mainRender = nullptr;
 
 Uint64 startTick;
@@ -67,6 +66,21 @@ std::vector<std::vector<bool>> pixels;
 //bool attributes[23][31] = {false};
 std::vector<std::vector<bool>> attributes;
 
+std::vector<SDL_Texture*> image_textures;
+
 const int blockSize = 36;
+
+const char *imageList[] = {
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_zoom_in_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_zoom_out_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_grid_on_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_grid_off_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_up_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_down_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_left_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_right_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_border_color_black_18dp.bmp",
+        "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_format_color_fill_black_18dp.bmp"
+};
 
 #endif //SDL2TEST_MAIN_H

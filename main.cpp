@@ -29,8 +29,6 @@ bool initSDL() {
 
 void exitSDL(){
     try {
-        SDL_DestroyTexture(bitmapTexture);
-        bitmapTexture = nullptr;
         SDL_DestroyRenderer(mainRender);
         mainRender = nullptr;
         SDL_DestroyWindow(mainWindow);
@@ -49,18 +47,21 @@ void rightMenu(){
     SDL_RenderFillRect(mainRender, &fillRect);
 }
 
-void drawGrid(int gridSize){
+void drawGrid(int zoomLevel){
     try {
+        SDL_Rect fillRect;
+        int attributeGridSize = zoomLevel * 8;
+
         if (showGrid) {
             // Minor ticks
             for (int y = 0; y <= pixels[0].size(); y++) {
                 for (int x = 0; x < pixels.size(); x++) {
-                    SDL_Rect fillRect = {x * gridSize, y * gridSize, gridSize, gridSize};
+                    fillRect = {x * zoomLevel, y * zoomLevel, zoomLevel, zoomLevel};
                     if (pixels[x][y]) {
                         SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
                         SDL_RenderFillRect(mainRender, &fillRect);
                     } else {
-                        if (gridSize >= 4) {
+                        if (zoomLevel >= 4) {
                             SDL_SetRenderDrawColor(mainRender, 128, 128, 128, SDL_ALPHA_OPAQUE);
                             SDL_RenderDrawRect(mainRender, &fillRect);
                         }
@@ -70,12 +71,10 @@ void drawGrid(int gridSize){
         }
 
         //Major ticks
-        int attributeGridSize = gridSize * 8;
-
         for (int y = 0; y <= attributes[0].size(); y++) {
             for (int x = 0; x <= attributes.size(); x++) {
                 SDL_SetRenderDrawColor(mainRender, 20, 20, 20, SDL_ALPHA_OPAQUE);
-                SDL_Rect fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
+                fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
                 SDL_RenderDrawRect(mainRender, &fillRect);
             }
         }
@@ -92,8 +91,10 @@ void colorSelector(){
     int startingPositionY = (maxScreenHeight - allColors) - 20;
     int temp_index = 0;
 
+    SDL_Rect fillRect;
+
     for (auto color: colorPalette0) {
-        SDL_Rect fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
+        fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
         SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(mainRender, &fillRect);
         temp_index++;
@@ -102,7 +103,7 @@ void colorSelector(){
     startingPositionX = maxScreenWidth - (100 - blockSize);
     temp_index = 0;
     for (auto color: colorPalette1) {
-        SDL_Rect fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
+        fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
         SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(mainRender, &fillRect);
         temp_index++;
@@ -110,50 +111,34 @@ void colorSelector(){
 }
 
 void loadIcons(){
-    const char *images[5][2] = {
-            {
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_border_color_black_18dp.bmp",
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_format_color_fill_black_18dp.bmp"
-            },
-            {
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_zoom_in_black_18dp.bmp",
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_zoom_out_black_18dp.bmp"
-            },
-            {
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_grid_on_black_18dp.bmp",
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_grid_off_black_18dp.bmp"
-            },
-            {
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_up_black_18dp.bmp",
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_down_black_18dp.bmp"
-            },
-            {
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_left_black_18dp.bmp",
-                    "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_keyboard_arrow_right_black_18dp.bmp"
-            }
-    };
-
-
+    SDL_Surface *bitmapImage;
+    SDL_Texture *bitmapTexture;
     int index = 0;
-    int subindex;
+
+    for (auto &image: imageList){
+        spdlog::info(image);
+        bitmapImage = SDL_LoadBMP(image);
+        bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
+        image_textures.push_back(bitmapTexture);
+        SDL_FreeSurface(bitmapImage);
+        SDL_DestroyTexture(bitmapTexture);
+        bitmapTexture = nullptr;
+        index++;
+    }
+}
+
+void drawIcons(){
+    int index = 0;
     int startingPositionX;
     int startingPositionY;
 
-    for (const auto &layerIndex: images) {
-        startingPositionX = maxScreenWidth - 100;
-        startingPositionY = 20 + (sizeof(images)/sizeof(images[0]));
-        subindex = 0;
-        for (const auto &image: layerIndex) {
-            if (subindex != 0){
-                startingPositionX = maxScreenWidth - (100 - blockSize);
-            }
-            SDL_Rect bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
-            SDL_Surface *bitmapImage = SDL_LoadBMP(image);
-            bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
-            SDL_FreeSurface(bitmapImage);
-            SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
-            subindex++;
-        }
+    for (SDL_Texture *texture: image_textures) {
+        // 4 is for padding
+        startingPositionX = maxScreenWidth - 104;
+        startingPositionY = 20 + (sizeof(imageList) / sizeof(imageList[0]));
+        SDL_Rect bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+        SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
+        spdlog::info("Drawing....");
         index++;
     }
 }
@@ -161,6 +146,7 @@ void loadIcons(){
 int main(int argc, char* args[]){
 
     try {
+        loadIcons();
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
 
@@ -195,37 +181,19 @@ int main(int argc, char* args[]){
                             if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
                                 maxScreenWidth = e.window.data1;
                                 maxScreenHeight = e.window.data2;
-
-//                                bitmapLayer.w = maxScreenWidth;
-//                                bitmapLayer.h = maxScreenHeight;
                             }
                             break;
                         case SDL_MOUSEBUTTONDOWN:
-//                            SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
                             mouseLocation.clicked = true;
                             break;
                         case SDL_MOUSEBUTTONUP:
-//                            showGrid = !showGrid;
                             mouseLocation.clicked = false;
-//                            pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = !pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize];
                             break;
                         case SDL_MOUSEMOTION:
                             SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
                             if (mouseLocation.clicked){
                                 pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = !pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize];
                             }
-//                        case SDL_MOUSEWHEEL:
-//                            if (!mouseLocation.clicked) {
-//                                if (e.wheel.y > 0) // scroll up
-//                                {
-//                                    pixelSize < 30 ? pixelSize++ : pixelSize = 30;
-//                                } else if (e.wheel.y < 0) // scroll down
-//                                {
-//                                    pixelSize > 2 ? pixelSize-- : pixelSize = 2;
-//                                }
-//                                attributeSize = pixelSize * 8;
-//                            }
-//                            break;
                         case SDL_KEYDOWN:
                             break;
                     }
@@ -235,13 +203,10 @@ int main(int argc, char* args[]){
                 SDL_SetRenderDrawColor(mainRender, colorPalette1[7].r, colorPalette1[7].g, colorPalette1[7].b, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(mainRender);
 
-                // Set background image
-//                SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
-
                 drawGrid(pixelSize);
                 rightMenu();
                 colorSelector();
-                loadIcons();
+                drawIcons();
 
 //                newStar.width = 8;
 //                newStar.height = 8;
