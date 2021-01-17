@@ -5,7 +5,7 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;MinSizeRel" CACHE STRING "" FORCE)
 project(zxpaint)
 
 set(CMAKE_CXX_STANDARD 14)
-
+set(spdlog_DIR /home/runner/work/zxpaint/zxpaint/spdlog)
 find_package(SDL2 REQUIRED SDL2::SDL2)
 
 if(NOT TARGET spdlog)
