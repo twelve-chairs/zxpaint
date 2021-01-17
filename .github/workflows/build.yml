@@ -41,10 +41,11 @@ jobs:
         git clone https://github.com/gabime/spdlog.git
           cd spdlog && mkdir build && cd build
           cmake .. && make -j
+          source ~/.bashrc
           cd ..
         cd ..
 
-    - name: Build Wrapper
+    - name: Sonar Build Wrapper
       shell: bash
       run: |
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
