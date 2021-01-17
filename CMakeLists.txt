@@ -11,4 +11,4 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 add_executable(zxpaint main.cpp main.h StarFish.cpp StarFish.h common.cpp common.h)
 
-target_link_libraries(zxpaint SDL2::SDL2 spdlog::spdlog)
+target_link_libraries(zxpaint ${SDL2_LIBRARIES} spdlog::spdlog)
