@@ -51,7 +51,7 @@ jobs:
       run: |
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
-        ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs build.sh
+        ./build-wrapper-linux-x86/build-wrapper-linux-x86-64
       
     - name: SonarCloud
       shell: bash
