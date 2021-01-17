@@ -21,7 +21,7 @@ jobs:
           cd build-wrapper-linux-x86
           cp * ..
           cd ..
-          ./build-wrapper --out-dir bw-outputs ./build.sh
+          ./build-wrapper-linux-x86-64 --out-dir bw-outputs ./build.sh
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
