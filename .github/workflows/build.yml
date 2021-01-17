@@ -18,7 +18,10 @@ jobs:
           wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip"
           unzip build-wrapper-linux-x86.zip          
           export PATH="($pwd/build-wrapper-linux-x86):$PATH"
-          build-wrapper --out-dir bw-outputs ./build.sh
+          cd build-wrapper-linux-x86
+          cp * ..
+          cd ..
+          ./build-wrapper --out-dir bw-outputs ./build.sh
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
