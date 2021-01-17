@@ -44,13 +44,13 @@ jobs:
         git clone https://github.com/gabime/spdlog.git
         cd spdlog && mkdir build && cd build
         cmake .. && make -j
-        cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
 
     - name: Build Wrapper
       shell: bash
       run: |
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
+        cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
       
     - name: SonarCloud
