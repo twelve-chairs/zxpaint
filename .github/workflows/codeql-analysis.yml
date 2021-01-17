@@ -64,7 +64,12 @@ jobs:
         sudo apt-get -y upgrade
         sudo apt-get -y dist-upgrade
         sudo apt-get -y autoremove
-        sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev libspdlog-dev
+        sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
+        
+        git clone https://github.com/gabime/spdlog.git
+        cd spdlog && mkdir build && cd build
+        cmake .. && make -j
+        
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
         cmake --build . --target zxpaint -- -j 2
 
