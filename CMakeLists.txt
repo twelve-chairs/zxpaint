@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
+
+set(CMAKE_CONFIGURATION_TYPES "Debug;MinSizeRel" CACHE STRING "" FORCE)
+
 project(zxpaint)
 
 set(CMAKE_CXX_STANDARD 14)
