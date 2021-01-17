@@ -112,17 +112,17 @@ void colorSelector(){
 
 void loadIcons(){
     SDL_Surface *bitmapImage;
-    SDL_Texture *bitmapTexture;
+//    SDL_Texture *bitmapTexture;
     int index = 0;
 
     for (auto &image: imageList){
         spdlog::info(image);
         bitmapImage = SDL_LoadBMP(image);
-        bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
-        image_textures.push_back(bitmapTexture);
+        image_textures.push_back(SDL_CreateTextureFromSurface(mainRender, bitmapImage));
         SDL_FreeSurface(bitmapImage);
-        SDL_DestroyTexture(bitmapTexture);
-        bitmapTexture = nullptr;
+        bitmapImage = nullptr;
+//        SDL_DestroyTexture(bitmapTexture);
+//        bitmapTexture = nullptr;
         index++;
     }
 }
@@ -192,7 +192,7 @@ int main(int argc, char* args[]){
                         case SDL_MOUSEMOTION:
                             SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
                             if (mouseLocation.clicked){
-                                pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = !pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize];
+                                pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
                             }
                         case SDL_KEYDOWN:
                             break;
