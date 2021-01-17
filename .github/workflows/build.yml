@@ -23,15 +23,8 @@ jobs:
 
     - name: Checkout submodules
       run: git submodule update --init --recursive
-
-#     - name: Packages
-#       run: |
-#         sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
-#         git clone https://github.com/gabime/spdlog.git
-#         cd spdlog && mkdir build && cd build
-#         cmake .. && make -j
         
-    - name: Build and Sonar
+    - name: Packages
       shell: bash
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
@@ -41,18 +34,27 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
-        
+
+    - name: spdlog
+      shell: bash
+      run: |
         git clone https://github.com/gabime/spdlog.git
           cd spdlog && mkdir build && cd build
           cmake .. && make -j
           cd ..
         cd ..
 
+    - name: Build Wrapper
+      shell: bash
+      run: |
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
 
+    - name: Sonar Scanner
+      shell: bash
+      run: |
         curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-linux.zip
         unzip sonar-scanner-cli-4.4.0.2170-linux.zip
         sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
