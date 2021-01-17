@@ -49,8 +49,8 @@ jobs:
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
         rm -rf CMakeFiles
-        rm -rf cmake_install*
-        rm -rf CMakeCache.txt
+        rm -f cmake_install.cmake
+        rm -f CMakeCache.txt
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
 
