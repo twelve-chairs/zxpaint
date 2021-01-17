@@ -49,8 +49,8 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    #- name: Autobuild
+    #  uses: github/codeql-action/autobuild@v1
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
@@ -59,7 +59,15 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    #- run: |
+    - run: |
+        sudo apt-get -y update
+        sudo apt-get -y upgrade
+        sudo apt-get -y dist-upgrade
+        sudo apt-get -y autoremove
+        sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev libspdlog-dev
+        cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
+        cmake --build . --target zxpaint -- -j 2
+
     #   make bootstrap
     #   make release
 
