@@ -15,13 +15,9 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Build Wrapper
         run: |
-          wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip"
-          unzip build-wrapper-linux-x86.zip          
-          export PATH="($pwd/build-wrapper-linux-x86):$PATH"
-          cd build-wrapper-linux-x86
-          cp * ..
-          cd ..
-          sudo ./build-wrapper-linux-x86-64 --out-dir bw-outputs ./build.sh
+          curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip -o build-wrapper-linux-x86.zip
+          build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir cfamily-output cmake --build build --config $BUILD_TYPE
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
