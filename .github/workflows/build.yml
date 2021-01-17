@@ -24,32 +24,36 @@ jobs:
     - name: Checkout submodules
       run: git submodule update --init --recursive
 
-    - name: Packages
-      run: |
-        sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
-        git clone https://github.com/gabime/spdlog.git
-        cd spdlog && mkdir build && cd build
-        cmake .. && make -j
+#     - name: Packages
+#       run: |
+#         sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
+#         git clone https://github.com/gabime/spdlog.git
+#         cd spdlog && mkdir build && cd build
+#         cmake .. && make -j
         
-    - name: Configure CMake
+    - name: Configure
       shell: bash
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
+      run: |
+        sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
+        git clone https://github.com/gabime/spdlog.git
+        cd spdlog && mkdir build && cd build
+        cmake .. && make -jcmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
 
-    - name: Build
+    - name: Build Wrapper
       shell: bash
       run: |
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -o build-wrapper-linux-x86.zip
-        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir cfamily-output cmake --build . --target lilDevil -- -j 2
+        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir cfamily-output cmake --build . --target zxpaint -- -j 2
       
     - name: SonarCloud
       shell: bash
       run: |
         curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-linux.zip
         unzip sonar-scanner-cli-4.4.0.2170-linux.zip
-        sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.cfamily.threads=$(nproc) -Dsonar.cfamily.cache.enabled=false -Dsonar.branch.name=${GITHUB_REF##*/} -Dsonar.organization=joelguittet -Dsonar.projectKey=joelguittet_c-amp -Dsonar.cfamily.build-wrapper-output=cfamily-output -X
+        sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
