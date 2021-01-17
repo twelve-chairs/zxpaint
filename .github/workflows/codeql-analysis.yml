@@ -68,8 +68,8 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
         cmake --build . --target zxpaint -- -j 2
 
-    #   make bootstrap
-    #   make release
+    - name: Cache
+      uses: actions/cache@v2.1.3
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
