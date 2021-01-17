@@ -12,7 +12,7 @@ if(NOT TARGET spdlog)
     # Stand-alone build
     find_package(spdlog REQUIRED)
 endif()
-find_package(spdlog REQUIRED HINTS /home/runner/work/zxpaint/zxpaint/spdlog)
+find_package(spdlog REQUIRED HINTS /home/runner/work/zxpaint/zxpaint/spdlog /home/runner/work/zxpaint/zxpaint/spdlog/cmake /home/runner/work/zxpaint/zxpaint/spdlog/build)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 
