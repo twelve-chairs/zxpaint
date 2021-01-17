@@ -51,11 +51,11 @@ jobs:
       run: |
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
-        ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
+        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
       
     - name: SonarCloud
       shell: bash
       run: |
         curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-linux.zip
         unzip sonar-scanner-cli-4.4.0.2170-linux.zip
-        ./sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
+        sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
