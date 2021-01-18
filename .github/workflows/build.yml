@@ -1,4 +1,4 @@
-name: CMake + SonarCloud Analysis
+name: Build
 
 on: [push]
 
