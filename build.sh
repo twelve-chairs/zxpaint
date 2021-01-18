@@ -1,6 +1,7 @@
 source ~/.bashrc
 
 conan profile new default --detect
+#MacOS doesn't recognize libstdc++11, so do this instead
 conan profile update settings.compiler.libcxx=libc++ default
 conan install .
 
