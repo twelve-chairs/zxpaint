@@ -13,7 +13,7 @@ set(spdlog_DIR /home/runner/work/zxpaint/zxpaint/spdlog/build)
 set(spdlog_INCLUDE_DIR /home/runner/work/zxpaint/zxpaint/spdlog/include)
 find_package(spdlog REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS})
+include_directories(${SDL2_INCLUDE_DIRS} spdlog_INCLUDE_DIR)
 
 add_executable(zxpaint main.cpp main.h StarFish.cpp StarFish.h common.cpp common.h)
 
