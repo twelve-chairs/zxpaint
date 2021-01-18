@@ -50,6 +50,7 @@ jobs:
     - name: Sonar Build Wrapper
       shell: bash
       run: |
+        ls -la
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
         export PATH="/home/runner/work/zxpaint/zxpaint/spdlog/cmake:$PATH"
