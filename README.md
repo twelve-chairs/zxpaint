@@ -6,7 +6,7 @@
 ## Intro
 A **work-in-progress** open source cross-platform project to emulate the [ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes)'s screen drawing capabilities, in the style of a simple modern image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based color schemes.
 
-![](https://github.com/twelvechairssoftware/zxpaint/raw/master/imageList/zxpaint.png)
+![Screenshot](https://github.com/twelvechairssoftware/zxpaint/raw/master/images/zxpaint.png)
 
 ## Roadmap
 1. Basic pixels ✅
