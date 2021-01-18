@@ -20,9 +20,6 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-
-    - name: Checkout submodules
-      run: git submodule update --init --recursive
         
     - name: Packages
       shell: bash
@@ -48,7 +45,6 @@ jobs:
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
-        ls -la
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
 
     - name: Sonar Scanner
