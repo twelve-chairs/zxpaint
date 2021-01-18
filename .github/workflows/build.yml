@@ -33,7 +33,7 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
+        sudo apt-get install -y build-essential git cmake curl libsdl2-2.0 libsdl2-dev
 
     - name: spdlog
       shell: bash
