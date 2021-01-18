@@ -111,37 +111,30 @@ void colorSelector(){
 }
 
 void loadIcons(){
-    SDL_Surface *bitmapImage;
-    SDL_Texture *bitmapTexture;
-    int index = 0;
 
-    for (auto &image: imageList){
-        spdlog::info(image);
-        bitmapImage = SDL_LoadBMP(image);
-        bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
-        image_textures.push_back(bitmapTexture);
-        SDL_FreeSurface(bitmapImage);
-        SDL_Rect bitmapLayer = {100, 100, blockSize, blockSize};
-        SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
-//        bitmapImage = nullptr;
-//        SDL_DestroyTexture(bitmapTexture);
-//        bitmapTexture = nullptr;
-        index++;
-    }
 }
 
+// TODO: this is awful. Please revisit.
 void drawIcons(){
+    icons.clear();
+
+    SDL_Surface *bitmapImage;
+    SDL_Rect bitmapLayer;
+    SDL_Texture *texture;
+
     int index = 0;
     int startingPositionX;
     int startingPositionY;
 
-    for (SDL_Texture *texture: image_textures) {
-        // 4 is for padding
+    for (auto &image: imageList){
+        bitmapImage = SDL_LoadBMP(image);
         startingPositionX = maxScreenWidth - 104;
         startingPositionY = 20 + (sizeof(imageList) / sizeof(imageList[0]));
-        SDL_Rect bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+        bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+        texture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
+        SDL_FreeSurface(bitmapImage);
         SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
-        spdlog::info("Drawing....");
+        SDL_DestroyTexture(texture);
         index++;
     }
 }
@@ -210,18 +203,6 @@ int main(int argc, char* args[]){
                 rightMenu();
                 colorSelector();
                 drawIcons();
-
-//                newStar.width = 8;
-//                newStar.height = 8;
-
-                //Top-left
-//                newStar.animation(mainRender, 0, newStar.width, 0, newStar.height);
-                //Top-right
-//                newStar.animation(mainRender, maxScreenWidth - newStar.width, maxScreenWidth, 0, newStar.height);
-                //Bottom-left
-//                newStar.animation(mainRender, 0, newStar.width, maxScreenHeight - newStar.height, maxScreenHeight);
-                //Bottom-right
-//                newStar.animation(mainRender, maxScreenWidth - newStar.width, maxScreenWidth, maxScreenHeight - newStar.height, maxScreenHeight);
 
                 SDL_RenderPresent(mainRender);
 

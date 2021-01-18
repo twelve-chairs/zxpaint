@@ -65,7 +65,7 @@ std::vector<std::vector<bool>> pixels;
 //bool attributes[23][31] = {false};
 std::vector<std::vector<bool>> attributes;
 
-std::vector<SDL_Texture*> image_textures;
+std::vector<SDL_Surface*> icons;
 
 const int blockSize = 36;
 
