@@ -44,7 +44,10 @@ jobs:
           cd build
             cmake ..
             make -j
+            export PATH="$(pwd)/cmake:$PATH"
+            export PATH="$(pwd):$PATH"
           cd ..
+          export PATH="$(pwd):$PATH"
         cd ..
 
     - name: Sonar Build Wrapper
