@@ -5,14 +5,12 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;MinSizeRel" CACHE STRING "" FORCE)
 project(zxpaint)
 
 set(CMAKE_CXX_STANDARD 14)
-set(spdlog_DIR /home/runner/work/zxpaint/zxpaint/spdlog/cmake)
+
 find_package(SDL2 REQUIRED SDL2::SDL2)
 
-if(NOT TARGET spdlog)
-    # Stand-alone build
-    find_package(spdlog REQUIRED)
-endif()
-find_package(spdlog REQUIRED HINTS /home/runner/work/zxpaint/zxpaint/spdlog /home/runner/work/zxpaint/zxpaint/spdlog/cmake /home/runner/work/zxpaint/zxpaint/spdlog/build)
+set(spdlog_DIR "/home/runner/work/zxpaint/zxpaint/spdlog")
+list(APPEND CMAKE_MODULE_PATH "/home/runner/work/zxpaint/zxpaint/spdlog/cmake")
+find_package(spdlog REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 
