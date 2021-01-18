@@ -14,4 +14,4 @@ conan_basic_setup(TARGETS)
 
 add_executable(zxpaint main.cpp main.h common.cpp common.h)
 
-target_link_libraries(zxpaint PUBLIC ${SDL2_LIBRARIES} CONAN_PKG::spdlog)
+target_link_libraries(zxpaint PUBLIC ${SDL2_LIBRARIES} CONAN_PKG::spdlog ${CONAN_LIBS})
