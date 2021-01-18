@@ -35,20 +35,20 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
 
-    - name: spdlog
-      shell: bash
-      run: |
-        git clone https://github.com/gabime/spdlog.git
-        cd spdlog
-          mkdir build
-          cd build
-            cmake ..
-            make -j
-            export PATH="$(pwd)/cmake:$PATH"
-            export PATH="$(pwd):$PATH"
-          cd ..
-          export PATH="$(pwd):$PATH"
-        cd ..
+#     - name: spdlog
+#       shell: bash
+#       run: |
+#         git clone https://github.com/gabime/spdlog.git
+#         cd spdlog
+#           mkdir build
+#           cd build
+#             cmake ..
+#             make -j
+#             export PATH="$(pwd)/cmake:$PATH"
+#             export PATH="$(pwd):$PATH"
+#           cd ..
+#           export PATH="$(pwd):$PATH"
+#         cd ..
 
     - name: Sonar Build Wrapper
       shell: bash
