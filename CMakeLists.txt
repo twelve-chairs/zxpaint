@@ -7,10 +7,12 @@ project(zxpaint)
 set(CMAKE_CXX_STANDARD 11)
 
 find_package(SDL2 REQUIRED SDL2::SDL2)
-
 include_directories(${SDL2_INCLUDE_DIRS})
+
 include(conanbuildinfo.cmake)
 conan_basic_setup()
+
+find_package(sdplog REQUIRED)
 
 add_executable(zxpaint main.cpp main.h common.cpp common.h)
 
