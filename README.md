@@ -1,6 +1,7 @@
 # ZX-Paint (alpha version)
+![example workflow name](https://github.com/actions/hello-world/workflows/Greet%20Everyone/badge.svg)
 
-
+![example workflow name](https://github.com/twelvechairssoftware/zxpaint/workflows/CMake+%2B+SonarCloud+Analysis/badge.svg)
 ## Intro
 A **work-in-progress** open source cross-platform project to emulate the [ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes)'s screen drawing capabilities, in the style of a simple modern image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based color schemes.
 
