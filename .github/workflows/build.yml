@@ -50,12 +50,11 @@ jobs:
     - name: Sonar Build Wrapper
       shell: bash
       run: |
-        ls -la
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
         export PATH="/home/runner/work/zxpaint/zxpaint/spdlog/cmake:$PATH"
-        rm CMakeCache.txt
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
+        ls -la
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
 
     - name: Sonar Scanner
