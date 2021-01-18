@@ -8,7 +8,6 @@
 #include "common.h"
 #include "StarFish.h"
 
-//using json = nlohmann::json;
 
 int maxScreenWidth = 1000;
 int maxScreenHeight = 760;

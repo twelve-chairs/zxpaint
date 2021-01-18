@@ -34,26 +34,19 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential git cmake curl libsdl2-2.0 libsdl2-dev
+        https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_32_1.deb
+        sudo dpkg -i conan-ubuntu-64_1_32_1.deb
 
-    - name: spdlog
+    - name: Libs
       shell: bash
       run: |
-        git clone https://github.com/gabime/spdlog.git
-        cd spdlog
-          mkdir build
-          cd build
-            cmake ..
-            make -j
-          cd ..
-        cd ..
+        conan install . --build=spdlog
 
     - name: Sonar Build Wrapper
       shell: bash
       run: |
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
-        export PATH="/home/runner/work/zxpaint/zxpaint/spdlog/build:$PATH"
-        export PATH="/home/runner/work/zxpaint/zxpaint/spdlog/cmake:$PATH"
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
         ls -la
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
