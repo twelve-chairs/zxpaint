@@ -37,6 +37,7 @@ jobs:
     - name: Libs
       shell: bash
       run: |
+        conan profile update settings.compiler.libcxx=libstdc++11 default
         conan install . --build=spdlog
 
     - name: Sonar Build Wrapper
