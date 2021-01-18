@@ -12,8 +12,6 @@ include_directories(${SDL2_INCLUDE_DIRS})
 include(conanbuildinfo.cmake)
 conan_basic_setup()
 
-find_package(sdplog REQUIRED)
-
 add_executable(zxpaint main.cpp main.h common.cpp common.h)
 
 target_link_libraries(zxpaint PUBLIC ${SDL2_LIBRARIES} ${CONAN_LIBS})
