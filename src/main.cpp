@@ -112,15 +112,18 @@ void colorSelector(){
 
 void loadIcons(){
     SDL_Surface *bitmapImage;
-//    SDL_Texture *bitmapTexture;
+    SDL_Texture *bitmapTexture;
     int index = 0;
 
     for (auto &image: imageList){
         spdlog::info(image);
         bitmapImage = SDL_LoadBMP(image);
-        image_textures.push_back(SDL_CreateTextureFromSurface(mainRender, bitmapImage));
+        bitmapTexture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
+        image_textures.push_back(bitmapTexture);
         SDL_FreeSurface(bitmapImage);
-        bitmapImage = nullptr;
+        SDL_Rect bitmapLayer = {100, 100, blockSize, blockSize};
+        SDL_RenderCopy(mainRender, bitmapTexture, nullptr, &bitmapLayer);
+//        bitmapImage = nullptr;
 //        SDL_DestroyTexture(bitmapTexture);
 //        bitmapTexture = nullptr;
         index++;
