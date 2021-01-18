@@ -44,7 +44,6 @@ jobs:
           cd build
             cmake ..
             make -j
-            export CMAKE_MODULE_PATH="$(pwd):$CMAKE_MODULE_PATH"
           cd ..
         cd ..
 
