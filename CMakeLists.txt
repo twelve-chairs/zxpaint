@@ -9,9 +9,23 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(SDL2 REQUIRED SDL2::SDL2)
 
 list(APPEND CMAKE_PREFIX_PATH "spdlog")
-set(spdlog_DIR /home/runner/work/zxpaint/zxpaint/spdlog/build)
-set(spdlog_INCLUDE_DIR /home/runner/work/zxpaint/zxpaint/spdlog/include)
 find_package(spdlog REQUIRED)
+
+##set(spdlog_DIR /home/runner/work/zxpaint/zxpaint/spdlog/build)
+##set(spdlog_INCLUDE_DIR /home/runner/work/zxpaint/zxpaint/spdlog/include)
+if(NOT EXISTS "${spdlog_DIR}")
+  find_path(spdlog_DIR
+    NAMES spdlogConfig.cmake
+    DOC "spdlog base dir"
+    )
+endif()
+
+if(NOT EXISTS "${spdlog_INCLUDE_DIR}")
+  find_path(spdlog_INCLUDE_DIR
+    NAMES spdlog/spdlog.h
+    DOC "spdlog library header files"
+    )
+endif()
 
 include_directories(${SDL2_INCLUDE_DIRS} spdlog_INCLUDE_DIR)
 
