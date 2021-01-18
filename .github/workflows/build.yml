@@ -35,33 +35,25 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y build-essential git cmake libsdl2-2.0 libsdl2-dev
 
-#     - name: spdlog
-#       shell: bash
-#       run: |
-#         git clone https://github.com/gabime/spdlog.git
-#         cd spdlog
-#           mkdir build
-#           cd build
-#             cmake ..
-#             make -j
-#             export PATH="$(pwd)/cmake:$PATH"
-#             export PATH="$(pwd):$PATH"
-#           cd ..
-#           export PATH="$(pwd):$PATH"
-#         cd ..
+    - name: spdlog
+      shell: bash
+      run: |
+        git clone https://github.com/gabime/spdlog.git
+        cd spdlog
+          mkdir build
+          cd build
+            cmake ..
+            make -j
+          cd ..
+        cd ..
 
     - name: Sonar Build Wrapper
       shell: bash
       run: |
-        git clone https://github.com/gabime/spdlog.git
-        cd spdlog && mkdir build && cd build
-        cmake .. && make -j
-        cd ..
-        cd ..
-        
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
         export PATH="/home/runner/work/zxpaint/zxpaint/spdlog/cmake:$PATH"
+        rm CMakeCache.txt
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-outputs cmake --build . --target zxpaint -- -j 2
 
