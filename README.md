@@ -24,7 +24,6 @@ A **work-in-progress** open source cross-platform project to emulate the [ZX Spe
 ## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
  - spdlog (https://github.com/gabime/spdlog)
- - nlohmann's JSON (https://github.com/nlohmann/json)
 
 
 ## License
