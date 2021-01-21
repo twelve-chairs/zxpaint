@@ -9,6 +9,7 @@
 #include <iostream>
 #include <ctime>
 #include <vector>
+#include <map>
 #include <string>
 #include <random>
 #include <spdlog/spdlog.h>

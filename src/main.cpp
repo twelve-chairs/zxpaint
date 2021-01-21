@@ -85,42 +85,33 @@ void drawGrid(int zoomLevel){
 }
 
 void colorSelector(){
-    int allColors = blockSize * (sizeof(colorPalette0)/sizeof(colorPalette0[0]));
-
+    int allColors = blockSize * colorPalette[0].size();
     int startingPositionX = maxScreenWidth - 100;
-    int startingPositionY = (maxScreenHeight - allColors) - 20;
-    int temp_index = 0;
-
+    int startingPositionY = (maxScreenHeight - allColors) - 40;
     SDL_Rect fillRect;
 
-    for (auto color: colorPalette0) {
-        fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
-        SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(mainRender, &fillRect);
-        temp_index++;
+    for (int index = 0; index <= 1; index++) {
+        int subindex = 0;
+        for (auto color: colorPalette[index]) {
+            fillRect = {(startingPositionX + index) + (index * blockSize), startingPositionY + (subindex * blockSize), blockSize, blockSize};
+            SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
+            SDL_RenderFillRect(mainRender, &fillRect);
+            fillRect = {(startingPositionX + index) + (index * blockSize), startingPositionY + (subindex * blockSize), blockSize, blockSize};
+            SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderDrawRect(mainRender, &fillRect);
+            subindex++;
+        }
     }
-
-    startingPositionX = maxScreenWidth - (100 - blockSize);
-    temp_index = 0;
-    for (auto color: colorPalette1) {
-        fillRect = {startingPositionX, (temp_index * blockSize) + startingPositionY, blockSize, blockSize};
-        SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(mainRender, &fillRect);
-        temp_index++;
-    }
-}
-
-void loadIcons(){
-
 }
 
 // TODO: this is awful. Please revisit.
 void drawIcons(){
-    icons.clear();
+//    icons.clear();
 
     SDL_Surface *bitmapImage;
     SDL_Rect bitmapLayer;
     SDL_Texture *texture;
+    SDL_Rect outlineRect;
 
     int index = 0;
     int startingPositionX;
@@ -128,13 +119,55 @@ void drawIcons(){
 
     for (auto &image: imageList){
         bitmapImage = SDL_LoadBMP(image);
-        startingPositionX = maxScreenWidth - 104;
+        startingPositionX = maxScreenWidth - 100;
         startingPositionY = 20 + (sizeof(imageList) / sizeof(imageList[0]));
-        bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+        if (index % 2 == 0){
+            bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+            outlineRect = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+
+            iconLocations[index].x1 = startingPositionX;
+            iconLocations[index].x2 = startingPositionX + blockSize;
+        }
+        else {
+            startingPositionY -= blockSize;
+            bitmapLayer = {startingPositionX + blockSize + 1, (index * blockSize) + startingPositionY, blockSize, blockSize};
+            outlineRect = {startingPositionX + blockSize + 1, (index * blockSize) + startingPositionY, blockSize, blockSize};
+
+            iconLocations[index].x1 = startingPositionX + blockSize + 1;
+            iconLocations[index].x2 = (startingPositionX + blockSize + 1) + blockSize;
+        }
+        iconLocations[index].y1 = (index * blockSize) + startingPositionY;
+        iconLocations[index].y2 = ((index * blockSize) + startingPositionY) + blockSize;
+
         texture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
         SDL_FreeSurface(bitmapImage);
+
+        SDL_SetRenderDrawColor(mainRender, 255, 255, 255, SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(mainRender, &outlineRect);
+
         SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
         SDL_DestroyTexture(texture);
+
+        for (auto _: iconLocations){
+            if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
+                (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)){
+                iconLocations[index].hover = true;
+
+                SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                SDL_RenderDrawRect(mainRender, &outlineRect);
+
+                if (index == 2 && mouseLocation.clicked) {
+                    showGrid = false;
+                }
+                if (index == 3 && mouseLocation.clicked) {
+                    showGrid = true;
+                }
+            }
+            else {
+                iconLocations[index].hover = false;
+            }
+        }
+
         index++;
     }
 }
@@ -142,7 +175,6 @@ void drawIcons(){
 int main(int argc, char* args[]){
 
     try {
-        loadIcons();
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
 
@@ -150,6 +182,40 @@ int main(int argc, char* args[]){
         pixels = {255, std::vector<bool>(191,false)};
         // 32x24 (8x8) attributes
         attributes = {31, std::vector<bool>(23,false)};
+
+        colorPalette = {
+                {
+                        rgb{0, 0, 0}, //BLACK0
+                        rgb{0, 0, 215}, //BLUE0
+                        rgb{215, 0, 0}, //RED0
+                        rgb{215, 0, 215}, //MAGENTA0
+                        rgb{0, 215, 0}, //GREEN0
+                        rgb{0, 215, 215}, //CYAN0
+                        rgb{215, 215, 0}, //YELLOW0
+                        rgb{215, 215, 215} //WHITE0
+                },
+                {
+                        rgb{0, 0, 0}, //BLACK1
+                        rgb{0, 0, 255}, //BLUE1
+                        rgb{255, 0, 0}, //RED1
+                        rgb{255, 0, 255}, //MAGENTA1
+                        rgb{0, 255, 0}, //GREEN1
+                        rgb{0, 255, 255}, //CYAN1
+                        rgb{255, 255, 0}, //YELLOW1
+                        rgb{255, 255, 255} //WHITE1
+                }
+        };
+
+        for (auto &image: imageList) {
+            iconLocation location = {
+            location.x1 = 0,
+            location.y1 = 0,
+            location.x2 = 0,
+            location.y2 = 0,
+            location.hover = false
+            };
+            iconLocations.push_back(location);
+        }
 
         bool mainLoopRunning = true;
 
@@ -161,11 +227,12 @@ int main(int argc, char* args[]){
 
             SDL_ShowCursor(1);
 
-            SDL_SetRenderDrawColor(mainRender, colorPalette0[0].r, colorPalette0[0].g, colorPalette0[0].b, SDL_ALPHA_OPAQUE);
+            SDL_SetRenderDrawColor(mainRender, colorPalette[0][0].r, colorPalette[0][0].g, colorPalette[0][0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
 
             while (mainLoopRunning) {
                 startTick = SDL_GetPerformanceCounter();
+                int index = 0;
                 // Get events for main loop
                 while (SDL_PollEvent(&e) != 0) {
                     switch (e.type){
@@ -190,13 +257,14 @@ int main(int argc, char* args[]){
                             if (mouseLocation.clicked){
                                 pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
                             }
+                            break;
                         case SDL_KEYDOWN:
                             break;
                     }
                 }
 
                 // IMPORTANT: clear render
-                SDL_SetRenderDrawColor(mainRender, colorPalette1[7].r, colorPalette1[7].g, colorPalette1[7].b, SDL_ALPHA_OPAQUE);
+                SDL_SetRenderDrawColor(mainRender, colorPalette[1][7].r, colorPalette[1][7].g, colorPalette[1][7].b, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(mainRender);
 
                 drawGrid(pixelSize);
