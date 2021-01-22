@@ -155,7 +155,12 @@ void drawIcons(){
 
                 SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
                 SDL_RenderDrawRect(mainRender, &outlineRect);
-
+                if (index == 0 && mouseLocation.clicked) {
+                    pixelSize += 1;
+                }
+                if (index == 1 && mouseLocation.clicked) {
+                    pixelSize -= 1;
+                }
                 if (index == 2 && mouseLocation.clicked) {
                     showGrid = false;
                 }
