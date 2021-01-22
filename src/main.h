@@ -9,8 +9,8 @@
 #include "StarFish.h"
 
 
-int maxScreenWidth = 1000;
-int maxScreenHeight = 760;
+int maxScreenWidth = 1154;
+int maxScreenHeight = 768;
 
 bool showGrid = true;
 int pixelSize = 4;
@@ -25,19 +25,23 @@ SDL_Renderer *mainRender = nullptr;
 Uint64 startTick;
 Uint64 endTick;
 
+struct mouseLocation {
+    int x;
+    int y;
+    bool clicked;
+} mouseLocation;
+
 struct rgb {
     uint8_t r;
     uint8_t g;
     uint8_t b;
 };
 
-std::vector<std::vector<rgb>> colorPalette;
-
-struct mouseLocation {
-    int x;
-    int y;
-    bool clicked;
-} mouseLocation;
+struct attribute {
+    uint8_t ink;
+    uint8_t paper;
+    bool bright;
+};
 
 struct iconLocation {
     int x1;
@@ -47,9 +51,11 @@ struct iconLocation {
     bool hover;
 };
 
-std::vector<std::vector<bool>> pixels;
-std::vector<std::vector<bool>> attributes;
+std::vector<std::vector<rgb>> colorPalette;
 std::vector<iconLocation> iconLocations;
+
+std::vector<std::vector<bool>> pixels;
+std::vector<std::vector<attribute>> attributes;
 
 const int blockSize = 36;
 

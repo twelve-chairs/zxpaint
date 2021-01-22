@@ -43,7 +43,7 @@ void exitSDL(){
 
 void rightMenu(){
     SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
-    SDL_SetRenderDrawColor(mainRender, 215, 215, 215, SDL_ALPHA_TRANSPARENT);
+    SDL_SetRenderDrawColor(mainRender, 215, 215, 215, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(mainRender, &fillRect);
 }
 
@@ -52,30 +52,44 @@ void drawGrid(int zoomLevel){
         SDL_Rect fillRect;
         int attributeGridSize = zoomLevel * 8;
 
+        for (int y = 0; y < attributes[0].size(); y++) {
+            for (int x = 0; x < attributes.size(); x++) {
+                fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
+                attribute attr = attributes.at(x).at(y);
+                SDL_SetRenderDrawColor(mainRender, colorPalette[attr.bright][attr.paper].r,
+                                       colorPalette[attr.bright][attr.paper].g,
+                                       colorPalette[attr.bright][attr.paper].b, SDL_ALPHA_OPAQUE);
+                SDL_RenderFillRect(mainRender, &fillRect);
+
+                int start_y = y * 8;
+                int start_x = x * 8;
+                for (int pixel_y = start_y; pixel_y <= start_y + 8; pixel_y++) {
+                    for (int pixel_x = start_x; pixel_x < start_x + 8; pixel_x++) {
+                        fillRect = {pixel_x * zoomLevel, pixel_y * zoomLevel, zoomLevel, zoomLevel};
+                        if (pixels[pixel_x][pixel_y]) {
+                            SDL_SetRenderDrawColor(mainRender, colorPalette[attr.bright][attr.ink].r,
+                                                   colorPalette[attr.bright][attr.ink].g,
+                                                   colorPalette[attr.bright][attr.ink].b, SDL_ALPHA_OPAQUE);
+                            SDL_RenderFillRect(mainRender, &fillRect);
+                        }
+                    }
+                }
+
+                SDL_SetRenderDrawColor(mainRender, 20, 20, 20, SDL_ALPHA_OPAQUE);
+                SDL_RenderDrawRect(mainRender, &fillRect);
+            }
+        }
         if (showGrid) {
             // Minor ticks
             for (int y = 0; y <= pixels[0].size(); y++) {
                 for (int x = 0; x < pixels.size(); x++) {
                     fillRect = {x * zoomLevel, y * zoomLevel, zoomLevel, zoomLevel};
-                    if (pixels[x][y]) {
-                        SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                        SDL_RenderFillRect(mainRender, &fillRect);
-                    } else {
-                        if (zoomLevel >= 4) {
-                            SDL_SetRenderDrawColor(mainRender, 128, 128, 128, SDL_ALPHA_OPAQUE);
-                            SDL_RenderDrawRect(mainRender, &fillRect);
-                        }
+                    if (zoomLevel >= 4) {
+                        SDL_SetRenderDrawBlendMode(mainRender, SDL_BLENDMODE_BLEND);
+                        SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 50);
+                        SDL_RenderDrawRect(mainRender, &fillRect);
                     }
                 }
-            }
-        }
-
-        //Major ticks
-        for (int y = 0; y <= attributes[0].size(); y++) {
-            for (int x = 0; x <= attributes.size(); x++) {
-                SDL_SetRenderDrawColor(mainRender, 20, 20, 20, SDL_ALPHA_OPAQUE);
-                fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
-                SDL_RenderDrawRect(mainRender, &fillRect);
             }
         }
     }
@@ -106,8 +120,6 @@ void colorSelector(){
 
 // TODO: this is awful. Please revisit.
 void drawIcons(){
-//    icons.clear();
-
     SDL_Surface *bitmapImage;
     SDL_Rect bitmapLayer;
     SDL_Texture *texture;
@@ -156,16 +168,20 @@ void drawIcons(){
                 SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
                 SDL_RenderDrawRect(mainRender, &outlineRect);
                 if (index == 0 && mouseLocation.clicked) {
-                    pixelSize += 1;
+                    if (pixelSize <= 200){
+                        pixelSize += 1;
+                    }
                 }
                 if (index == 1 && mouseLocation.clicked) {
-                    pixelSize -= 1;
+                    if (pixelSize >= 2) {
+                        pixelSize -= 1;
+                    }
                 }
                 if (index == 2 && mouseLocation.clicked) {
-                    showGrid = false;
+                    showGrid = true;
                 }
                 if (index == 3 && mouseLocation.clicked) {
-                    showGrid = true;
+                    showGrid = false;
                 }
             }
             else {
@@ -178,15 +194,14 @@ void drawIcons(){
 }
 
 int main(int argc, char* args[]){
-
     try {
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
 
         // 256x192 (1x1) pixels
-        pixels = {255, std::vector<bool>(191,false)};
+        pixels = {256, std::vector<bool>(192,false)};
         // 32x24 (8x8) attributes
-        attributes = {31, std::vector<bool>(23,false)};
+        attributes = {32, std::vector<attribute>(24, {0, 7, 0})};
 
         colorPalette = {
                 {
@@ -213,11 +228,11 @@ int main(int argc, char* args[]){
 
         for (auto &image: imageList) {
             iconLocation location = {
-            location.x1 = 0,
-            location.y1 = 0,
-            location.x2 = 0,
-            location.y2 = 0,
-            location.hover = false
+                    location.x1 = 0,
+                    location.y1 = 0,
+                    location.x2 = 0,
+                    location.y2 = 0,
+                    location.hover = false
             };
             iconLocations.push_back(location);
         }
@@ -261,6 +276,7 @@ int main(int argc, char* args[]){
                             SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
                             if (mouseLocation.clicked){
                                 pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
+                                attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8].paper = 2;
                             }
                             break;
                         case SDL_KEYDOWN:
