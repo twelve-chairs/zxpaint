@@ -19,7 +19,8 @@ A **work-in-progress** open source cross-platform project to simulate the [ZX Sp
 8. Basic shapes (line, circle) 🌤️
 9. Shape filling 🌤️
 10. Text 🌤️
-11. Export to file 🌤
+11. Save to file
+12. Export to `scr` 🌤
 
 ## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
