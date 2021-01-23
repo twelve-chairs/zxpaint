@@ -101,7 +101,7 @@ void drawGrid(int zoomLevel){
 void colorSelector(){
     int allColors = blockSize * colorPalette[0].size();
     int startingPositionX = maxScreenWidth - 100;
-    int startingPositionY = (maxScreenHeight - allColors) - 40;
+    int startingPositionY = (maxScreenHeight - allColors) - 20;
     SDL_Rect fillRect;
 
     for (int index = 0; index <= 1; index++) {

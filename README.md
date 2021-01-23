@@ -12,14 +12,14 @@ A **work-in-progress** open source cross-platform project to simulate the [ZX Sp
 1. Basic pixels ✅
 2. Window resizing ✅
 3. Basic zoom in/out ✅
-4. Menu selector buttons ✅
-5. Attributes 🚧
-6. View panning (maybe scroll bars)
-7. Color selection
+4. Menu selector buttons (hover and click) ✅
+5. Attributes ✅
+6. Color/ink/paper selection 🚧
+7. View panning (maybe scroll bars) 🌤️
 8. Basic shapes (line, circle) 🌤️
 9. Shape filling 🌤️
 10. Text 🌤️
-11. Export to file
+11. Export to file 🌤
 
 ## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
