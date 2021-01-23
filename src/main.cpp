@@ -47,18 +47,22 @@ void rightMenu(){
     SDL_RenderFillRect(mainRender, &fillRect);
 }
 
-void drawGrid(int zoomLevel){
+void drawScreen(int zoomLevel){
     try {
         SDL_Rect fillRect;
         int attributeGridSize = zoomLevel * 8;
+
+        if (mouseLocation.clicked){
+            pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
+            attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8].paper = 2;
+        }
 
         for (int y = 0; y < attributes[0].size(); y++) {
             for (int x = 0; x < attributes.size(); x++) {
                 fillRect = {x * attributeGridSize, y * attributeGridSize, attributeGridSize, attributeGridSize};
                 attribute attr = attributes.at(x).at(y);
-                SDL_SetRenderDrawColor(mainRender, colorPalette[attr.bright][attr.paper].r,
-                                       colorPalette[attr.bright][attr.paper].g,
-                                       colorPalette[attr.bright][attr.paper].b, SDL_ALPHA_OPAQUE);
+                auto temp = colorPalette[attr.bright][attr.paper];
+                SDL_SetRenderDrawColor(mainRender, temp.r, temp.g, temp.b, SDL_ALPHA_OPAQUE);
                 SDL_RenderFillRect(mainRender, &fillRect);
 
                 int start_y = y * 8;
@@ -67,9 +71,8 @@ void drawGrid(int zoomLevel){
                     for (int pixel_x = start_x; pixel_x < start_x + 8; pixel_x++) {
                         fillRect = {pixel_x * zoomLevel, pixel_y * zoomLevel, zoomLevel, zoomLevel};
                         if (pixels[pixel_x][pixel_y]) {
-                            SDL_SetRenderDrawColor(mainRender, colorPalette[attr.bright][attr.ink].r,
-                                                   colorPalette[attr.bright][attr.ink].g,
-                                                   colorPalette[attr.bright][attr.ink].b, SDL_ALPHA_OPAQUE);
+                            temp = colorPalette[attr.bright][attr.ink];
+                            SDL_SetRenderDrawColor(mainRender, temp.r, temp.g, temp.b, SDL_ALPHA_OPAQUE);
                             SDL_RenderFillRect(mainRender, &fillRect);
                         }
                     }
@@ -79,7 +82,16 @@ void drawGrid(int zoomLevel){
                 SDL_RenderDrawRect(mainRender, &fillRect);
             }
         }
+    }
+    catch (std::exception &e){
+        spdlog::error(e.what());
+    }
+}
+
+void drawGrid(int zoomLevel){
+    try {
         if (showGrid) {
+            SDL_Rect fillRect;
             // Minor ticks
             for (int y = 0; y <= pixels[0].size(); y++) {
                 for (int x = 0; x < pixels.size(); x++) {
@@ -198,10 +210,12 @@ int main(int argc, char* args[]){
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
 
+        attribute selectedColors = {0, 7, false};
+
         // 256x192 (1x1) pixels
         pixels = {256, std::vector<bool>(192,false)};
         // 32x24 (8x8) attributes
-        attributes = {32, std::vector<attribute>(24, {0, 7, 0})};
+        attributes = {32, std::vector<attribute>(24, selectedColors)};
 
         colorPalette = {
                 {
@@ -274,10 +288,6 @@ int main(int argc, char* args[]){
                             break;
                         case SDL_MOUSEMOTION:
                             SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
-                            if (mouseLocation.clicked){
-                                pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
-                                attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8].paper = 2;
-                            }
                             break;
                         case SDL_KEYDOWN:
                             break;
@@ -285,9 +295,11 @@ int main(int argc, char* args[]){
                 }
 
                 // IMPORTANT: clear render
-                SDL_SetRenderDrawColor(mainRender, colorPalette[1][7].r, colorPalette[1][7].g, colorPalette[1][7].b, SDL_ALPHA_OPAQUE);
+                auto temp = colorPalette[selectedColors.bright][selectedColors.paper];
+                SDL_SetRenderDrawColor(mainRender, temp.r, temp.g, temp.b, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(mainRender);
 
+                drawScreen(pixelSize);
                 drawGrid(pixelSize);
                 rightMenu();
                 colorSelector();

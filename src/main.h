@@ -12,8 +12,8 @@
 int maxScreenWidth = 1154;
 int maxScreenHeight = 768;
 
-bool showGrid = true;
-int pixelSize = 4;
+static bool showGrid = true;
+static int pixelSize = 4;
 int attributeSize = pixelSize * 8;
 
 bool initSDL();
