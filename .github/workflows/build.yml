@@ -60,7 +60,4 @@ jobs:
     - name: Bintray
       shell: bash
       run: |
-        ls -la
-        ls bin
-        ls bw-outputs
-        curl -T bin/zxpaint -utwelvechairssoftware:{BITRAY_KEY} https://api.bintray.com/content/twelvechairssoftware/Artifacts/zxpaint/0/zxpaint-debian
+        curl -T bin/zxpaint -utwelvechairssoftware:$BITRAY_KEY https://api.bintray.com/content/twelvechairssoftware/Artifacts/zxpaint/0/zxpaint-debian
