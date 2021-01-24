@@ -43,7 +43,7 @@ struct attribute {
     bool bright;
 };
 
-struct iconLocation {
+struct objectLocation {
     int x1;
     int y1;
     int x2;
@@ -55,7 +55,8 @@ struct iconLocation {
 attribute selectedColors;
 
 std::vector<std::vector<rgb>> colorPalette;
-std::vector<iconLocation> iconLocations;
+std::vector<objectLocation> iconLocations;
+std::vector<std::vector<objectLocation>> colorLocations;
 
 std::vector<std::vector<bool>> pixels;
 std::vector<std::vector<attribute>> attributes;

@@ -41,7 +41,7 @@ void exitSDL(){
     }
 }
 
-void rightMenu(){
+void drawRightMenuPane(){
     SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
     SDL_SetRenderDrawColor(mainRender, 220, 220, 220, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(mainRender, &fillRect);
@@ -116,7 +116,7 @@ void drawGrid(int zoomLevel){
     }
 }
 
-void colorSelector(){
+void drawColorOptions(){
     int allColors = blockSize * colorPalette[0].size();
     int startingPositionX = maxScreenWidth - 100;
     int startingPositionY = (maxScreenHeight - allColors) - 20;
@@ -124,13 +124,27 @@ void colorSelector(){
 
     for (int index = 0; index <= 1; index++) {
         int subindex = 0;
+        int offset = 0;
         for (auto color: colorPalette[index]) {
-            fillRect = {(startingPositionX + index) + (index * blockSize), startingPositionY + (subindex * blockSize), blockSize, blockSize};
+            offset = (subindex <= 0) ? 0 : 1;
+            fillRect = {
+                    (startingPositionX + index) + (index * blockSize),
+                    (startingPositionY + (subindex * blockSize)) + offset,
+                    blockSize,
+                    blockSize-offset
+            };
             SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
             SDL_RenderFillRect(mainRender, &fillRect);
-            fillRect = {(startingPositionX + index) + (index * blockSize), startingPositionY + (subindex * blockSize), blockSize, blockSize};
-            SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderDrawRect(mainRender, &fillRect);
+
+            if (colorLocations[index][subindex].hover || colorLocations[index][subindex].selected) {
+                SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                SDL_RenderDrawRect(mainRender, &fillRect);
+            }
+
+            colorLocations.at(index).at(subindex) = {
+                    fillRect.x, fillRect.y, fillRect.x + blockSize, fillRect.y + blockSize
+            };
+
             subindex++;
         }
     }
@@ -139,6 +153,7 @@ void colorSelector(){
 void mouseEvents(int index){
     try {
         if (mouseLocation.clicked) {
+            // Clicked on main board
             if (mouseLocation.x / pixelSize < pixels.size()) {
                 pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
                 attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
@@ -147,7 +162,9 @@ void mouseEvents(int index){
                         selectedColors.bright
                 };
             }
+                // Clicked menu bar
             else {
+                // Check icons
                 if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
                     (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)) {
                     iconLocations[index].selected = true;
@@ -173,19 +190,50 @@ void mouseEvents(int index){
                         default:
                             break;
                     }
-                }
-                else {
+                } else {
                     iconLocations[index].selected = false;
+                }
+
+                // Check colours
+                for (int n = 0; n < colorLocations.size(); n++) {
+                    for (int m = 0; m < colorLocations[n].size(); m++) {
+                        if ((colorLocations[n][m].x1 <= mouseLocation.x && mouseLocation.x <= colorLocations[n][m].x2) &&
+                            (colorLocations[n][m].y1 <= mouseLocation.y && mouseLocation.y <= colorLocations[n][m].y2)) {
+                            colorLocations[n][m].selected = true;
+                            selectedColors.ink = randomInteger(7);
+                            selectedColors.paper = randomInteger(7);
+                            selectedColors.bright = randomInteger(1);
+                        }
+                        else {
+                            colorLocations[n][m].selected = false;
+                        }
+                    }
                 }
             }
         }
+        // Not clicked
         else {
+            // Icons
             if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
                 (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)) {
                 iconLocations[index].hover = true;
             }
             else {
                 iconLocations[index].hover = false;
+            }
+
+            // Colors
+            for (int n = 0; n < 2; n++) {
+                for (int m = 0; m < 8; m++) {
+                    if ((colorLocations[n][m].x1 <= mouseLocation.x && mouseLocation.x <= colorLocations[n][m].x2) &&
+                        (colorLocations[n][m].y1 <= mouseLocation.y && mouseLocation.y <= colorLocations[n][m].y2)) {
+                        colorLocations[n][m].hover = true;
+                    }
+                    else {
+                        colorLocations[n][m].hover = false;
+
+                    }
+                }
             }
         }
     }
@@ -285,17 +333,9 @@ int main(int argc, char* args[]){
                 }
         };
 
-        for (auto &image: imageList) {
-            iconLocation location = {
-                    location.x1 = 0,
-                    location.y1 = 0,
-                    location.x2 = 0,
-                    location.y2 = 0,
-                    location.hover = false,
-                    location.selected = false
-            };
-            iconLocations.push_back(location);
-        }
+        objectLocation location = {0, 0, 0, 0, false, false};
+        iconLocations = {10, location};
+        colorLocations = {colorPalette.size(), std::vector<objectLocation>(colorPalette[0].size(), location)};
 
         bool mainLoopRunning = true;
 
@@ -340,14 +380,13 @@ int main(int argc, char* args[]){
                 }
 
                 // IMPORTANT: clear render
-                auto temp = colorPalette[selectedColors.bright][selectedColors.paper];
-                SDL_SetRenderDrawColor(mainRender, temp.r, temp.g, temp.b, SDL_ALPHA_OPAQUE);
+                SDL_SetRenderDrawColor(mainRender, 255,255, 255, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(mainRender);
 
                 drawScreen(pixelSize);
                 drawGrid(pixelSize);
-                rightMenu();
-                colorSelector();
+                drawRightMenuPane();
+                drawColorOptions();
                 drawIcons();
 
                 SDL_RenderPresent(mainRender);
