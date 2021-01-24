@@ -2,7 +2,7 @@
 
 ![Build](https://github.com/twelvechairssoftware/zxpaint/workflows/Build/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=twelvechairssoftware_zxpaint&metric=alert_status)](https://sonarcloud.io/dashboard?id=twelvechairssoftware_zxpaint)
-
+[ ![Download](https://api.bintray.com/packages/twelvechairssoftware/Artifacts/zxpaint/images/download.svg) ](https://bintray.com/twelvechairssoftware/Artifacts/zxpaint/_latestVersion)
 ## Intro
 A **work-in-progress** open source cross-platform project to simulate the [ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes)'s screen drawing capabilities, in the style of a simple modern-ish image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based color schemes.
 
