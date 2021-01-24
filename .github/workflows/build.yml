@@ -61,4 +61,4 @@ jobs:
       shell: bash
       run: |
         ls -la
-        curl -T minsizerel/zxpaint -utwelvechairssoftware:{BITRAY_KEY} https://api.bintray.com/content/twelvechairssoftware/Artifacts/zxpaint/0/zxpaint-debian
+        curl -T bw-outputs/zxpaint -utwelvechairssoftware:{BITRAY_KEY} https://api.bintray.com/content/twelvechairssoftware/Artifacts/zxpaint/0/zxpaint-debian
