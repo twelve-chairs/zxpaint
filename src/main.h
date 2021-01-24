@@ -49,7 +49,10 @@ struct iconLocation {
     int x2;
     int y2;
     bool hover;
+    bool selected;
 };
+
+attribute selectedColors;
 
 std::vector<std::vector<rgb>> colorPalette;
 std::vector<iconLocation> iconLocations;

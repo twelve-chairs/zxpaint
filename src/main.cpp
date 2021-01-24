@@ -7,7 +7,7 @@ bool initSDL() {
             return false;
         }
 
-        mainWindow = SDL_CreateWindow("ZX-Paint (alpha) - Twelve Chairs Software, LLC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        mainWindow = SDL_CreateWindow("ZX-Paint", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                       maxScreenWidth, maxScreenHeight, SDL_WINDOW_RESIZABLE);
         if (mainWindow == nullptr){
             spdlog::error(SDL_GetError());
@@ -43,7 +43,7 @@ void exitSDL(){
 
 void rightMenu(){
     SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
-    SDL_SetRenderDrawColor(mainRender, 215, 215, 215, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(mainRender, 220, 220, 220, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(mainRender, &fillRect);
 }
 
@@ -51,11 +51,6 @@ void drawScreen(int zoomLevel){
     try {
         SDL_Rect fillRect;
         int attributeGridSize = zoomLevel * 8;
-
-        if (mouseLocation.clicked){
-            pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
-            attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8].paper = 2;
-        }
 
         for (int y = 0; y < attributes[0].size(); y++) {
             for (int x = 0; x < attributes.size(); x++) {
@@ -98,7 +93,18 @@ void drawGrid(int zoomLevel){
                     fillRect = {x * zoomLevel, y * zoomLevel, zoomLevel, zoomLevel};
                     if (zoomLevel >= 4) {
                         SDL_SetRenderDrawBlendMode(mainRender, SDL_BLENDMODE_BLEND);
-                        SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 50);
+                        SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 15);
+                        SDL_RenderDrawRect(mainRender, &fillRect);
+                    }
+                }
+            }
+            // Major ticks
+            for (int y = 0; y <= attributes[0].size(); y++) {
+                for (int x = 0; x < attributes.size(); x++) {
+                    fillRect = {x * attributeSize, y * attributeSize, attributeSize, attributeSize};
+                    if (zoomLevel >= 4) {
+                        SDL_SetRenderDrawBlendMode(mainRender, SDL_BLENDMODE_BLEND);
+                        SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 30);
                         SDL_RenderDrawRect(mainRender, &fillRect);
                     }
                 }
@@ -127,6 +133,64 @@ void colorSelector(){
             SDL_RenderDrawRect(mainRender, &fillRect);
             subindex++;
         }
+    }
+}
+
+void mouseEvents(int index){
+    try {
+        if (mouseLocation.clicked) {
+            if (mouseLocation.x / pixelSize < pixels.size()) {
+                pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
+                attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
+                        selectedColors.ink,
+                        selectedColors.paper,
+                        selectedColors.bright
+                };
+            }
+            else {
+                if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
+                    (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)) {
+                    iconLocations[index].selected = true;
+
+                    // Click events
+                    switch (index) {
+                        case 0:
+                            if (pixelSize <= 200) {
+                                pixelSize += 1;
+                            }
+                            break;
+                        case 1:
+                            if (pixelSize >= 2) {
+                                pixelSize -= 1;
+                            }
+                            break;
+                        case 2:
+                            showGrid = true;
+                            break;
+                        case 3:
+                            showGrid = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    iconLocations[index].selected = false;
+                }
+            }
+        }
+        else {
+            if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
+                (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)) {
+                iconLocations[index].hover = true;
+            }
+            else {
+                iconLocations[index].hover = false;
+            }
+        }
+    }
+    catch (std::exception &e){
+        spdlog::error(e.what());
     }
 }
 
@@ -160,6 +224,7 @@ void drawIcons(){
             iconLocations[index].x1 = startingPositionX + blockSize + 1;
             iconLocations[index].x2 = (startingPositionX + blockSize + 1) + blockSize;
         }
+
         iconLocations[index].y1 = (index * blockSize) + startingPositionY;
         iconLocations[index].y2 = ((index * blockSize) + startingPositionY) + blockSize;
 
@@ -172,34 +237,12 @@ void drawIcons(){
         SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
         SDL_DestroyTexture(texture);
 
-        for (auto _: iconLocations){
-            if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
-                (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)){
-                iconLocations[index].hover = true;
-
-                SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                SDL_RenderDrawRect(mainRender, &outlineRect);
-                if (index == 0 && mouseLocation.clicked) {
-                    if (pixelSize <= 200){
-                        pixelSize += 1;
-                    }
-                }
-                if (index == 1 && mouseLocation.clicked) {
-                    if (pixelSize >= 2) {
-                        pixelSize -= 1;
-                    }
-                }
-                if (index == 2 && mouseLocation.clicked) {
-                    showGrid = true;
-                }
-                if (index == 3 && mouseLocation.clicked) {
-                    showGrid = false;
-                }
-            }
-            else {
-                iconLocations[index].hover = false;
-            }
+        if (iconLocations[index].hover) {
+            SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderDrawRect(mainRender, &outlineRect);
         }
+
+        mouseEvents(index);
 
         index++;
     }
@@ -210,12 +253,14 @@ int main(int argc, char* args[]){
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
 
-        attribute selectedColors = {0, 7, false};
+        selectedColors = {0, 7, true};
 
         // 256x192 (1x1) pixels
         pixels = {256, std::vector<bool>(192,false)};
         // 32x24 (8x8) attributes
         attributes = {32, std::vector<attribute>(24, selectedColors)};
+
+        selectedColors = {0, 2, true};
 
         colorPalette = {
                 {
@@ -246,7 +291,8 @@ int main(int argc, char* args[]){
                     location.y1 = 0,
                     location.x2 = 0,
                     location.y2 = 0,
-                    location.hover = false
+                    location.hover = false,
+                    location.selected = false
             };
             iconLocations.push_back(location);
         }
@@ -266,7 +312,6 @@ int main(int argc, char* args[]){
 
             while (mainLoopRunning) {
                 startTick = SDL_GetPerformanceCounter();
-                int index = 0;
                 // Get events for main loop
                 while (SDL_PollEvent(&e) != 0) {
                     switch (e.type){
