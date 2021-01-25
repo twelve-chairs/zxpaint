@@ -2,9 +2,9 @@
 
 ![Build](https://github.com/twelvechairssoftware/zxpaint/workflows/Build/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=twelvechairssoftware_zxpaint&metric=alert_status)](https://sonarcloud.io/dashboard?id=twelvechairssoftware_zxpaint)
-[ ![Download](https://api.bintray.com/packages/twelvechairssoftware/Artifacts/zxpaint/images/download.svg) ](https://bintray.com/twelvechairssoftware/Artifacts/zxpaint/_latestVersion)
+[ ![Download - Debian](https://api.bintray.com/packages/twelvechairssoftware/Artifacts/zxpaint/images/download.svg) ](https://bintray.com/twelvechairssoftware/Artifacts/zxpaint/_latestVersion)
 ## Intro
-A **work-in-progress** open source cross-platform project to simulate the [ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes)'s screen drawing capabilities, in the style of a simple modern-ish image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based color schemes.
+A **work-in-progress** open source project to simulate the [ZX Spectrum's screen drawing capabilities](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes), in the style of a simple modern-ish image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based colour schemes. Why? Simply because the [Sinclair ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum) is a unique monster from the 80s that has had such a massive impact on gaming, and demo scenes with its unique screen drawing capabilities. Even more honestly - we just wanted to become familiar with `SDL2` to enhance our skillset for future cross-platform medical sumilation software 😊
 
 ![Screenshot](https://github.com/twelvechairssoftware/zxpaint/raw/master/images/zxpaint.png)
 
