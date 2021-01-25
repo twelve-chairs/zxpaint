@@ -14,15 +14,15 @@ A **work-in-progress** open source project to simulate the [ZX Spectrum's screen
 3. Basic zoom in/out ✅
 4. Menu selector buttons (hover and click) ✅
 5. Attributes ✅
-6. Color/ink/paper selection 🚧
+6. Color/ink/paper selection ✅
 7. View panning (maybe scroll bars) 🌤️
 8. Basic shapes (line, circle) 🌤️
 9. Shape filling 🌤️
 10. Text 🌤️
-11. Save to file
+11. Save to file 🌤️
 12. Export to `scr` 🌤
 
-✅ done; 🚧 in-progress; 🌤️ some day, maybe;
+✅ - done; 🚧 - in-progress; 🌤️ -  some day, maybe;
 
 ## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
