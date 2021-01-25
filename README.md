@@ -1,4 +1,4 @@
-# ZX-Paint (alpha version)
+# ZX-Paint
 
 ![Build](https://github.com/twelvechairssoftware/zxpaint/workflows/Build/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=twelvechairssoftware_zxpaint&metric=alert_status)](https://sonarcloud.io/dashboard?id=twelvechairssoftware_zxpaint)
@@ -21,6 +21,8 @@ A **work-in-progress** open source project to simulate the [ZX Spectrum's screen
 10. Text 🌤️
 11. Save to file
 12. Export to `scr` 🌤
+
+✅ done; 🚧 in-progress; 🌤️ some day, maybe;
 
 ## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
