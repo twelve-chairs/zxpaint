@@ -148,6 +148,34 @@ void drawColorOptions(){
             subindex++;
         }
     }
+
+    // Ink color
+    fillRect = {
+            iconLocations[8].x1,
+            iconLocations[8].y1 + 30,
+            blockSize,
+            5
+    };
+    SDL_SetRenderDrawColor(mainRender,
+                           colorPalette[selectedColors.bright][selectedColors.ink].r,
+                           colorPalette[selectedColors.bright][selectedColors.ink].g,
+                           colorPalette[selectedColors.bright][selectedColors.ink].b,
+                           SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRect(mainRender, &fillRect);
+
+    // Paper color
+    fillRect = {
+            iconLocations[9].x1 + 1,
+            iconLocations[9].y1 + 30,
+            blockSize - 1,
+            5
+    };
+    SDL_SetRenderDrawColor(mainRender,
+                           colorPalette[selectedColors.bright][selectedColors.paper].r,
+                           colorPalette[selectedColors.bright][selectedColors.paper].g,
+                           colorPalette[selectedColors.bright][selectedColors.paper].b,
+                           SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRect(mainRender, &fillRect);
 }
 
 void mouseEvents(int index){
@@ -386,8 +414,8 @@ int main(int argc, char* args[]){
                 drawScreen(pixelSize);
                 drawGrid(pixelSize);
                 drawRightMenuPane();
-                drawColorOptions();
                 drawIcons();
+                drawColorOptions();
 
                 SDL_RenderPresent(mainRender);
 
