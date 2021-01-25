@@ -7,6 +7,7 @@ env:
   BUILD_TYPE: Release
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  BITRAY_KEY: ${{ secrets.BINTRAY_API_KEY }} 
 
 jobs:
   build:
@@ -55,3 +56,8 @@ jobs:
         curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-linux.zip
         unzip sonar-scanner-cli-4.4.0.2170-linux.zip
         sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
+        
+    - name: Bintray
+      shell: bash
+      run: |
+        curl -T bin/zxpaint -utwelvechairssoftware:$BITRAY_KEY https://api.bintray.com/content/twelvechairssoftware/Artifacts/zxpaint/0/zxpaint-debian
