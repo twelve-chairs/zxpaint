@@ -151,9 +151,9 @@ void drawColorOptions(){
 
     // Ink color
     fillRect = {
-            iconLocations[8].x1,
+            iconLocations[8].x1 + 1,
             iconLocations[8].y1 + 30,
-            blockSize,
+            blockSize - 2,
             5
     };
     SDL_SetRenderDrawColor(mainRender,
@@ -167,7 +167,7 @@ void drawColorOptions(){
     fillRect = {
             iconLocations[9].x1 + 1,
             iconLocations[9].y1 + 30,
-            blockSize - 1,
+            blockSize - 2,
             5
     };
     SDL_SetRenderDrawColor(mainRender,
@@ -183,12 +183,22 @@ void mouseEvents(int index){
         if (mouseLocation.clicked) {
             // Clicked on main board
             if (mouseLocation.x / pixelSize < pixels.size()) {
-                pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
-                attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
-                        selectedColors.ink,
-                        selectedColors.paper,
-                        selectedColors.bright
-                };
+                auto attr_copy = attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8];
+                if (ink){
+                    pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
+                    attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
+                            selectedColors.ink,
+                            attr_copy.paper,
+                            selectedColors.bright
+                    };
+                }
+                else {
+                    attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
+                            attr_copy.ink,
+                            selectedColors.paper,
+                            attr_copy.bright
+                    };
+                }
             }
                 // Clicked menu bar
             else {
@@ -215,6 +225,18 @@ void mouseEvents(int index){
                         case 3:
                             showGrid = false;
                             break;
+                        case 8:
+                            ink = true;
+                            paper = false;
+                            iconLocations[8].selected = true;
+                            iconLocations[9].selected = false;
+                            break;
+                        case 9:
+                            paper = true;
+                            ink = false;
+                            iconLocations[8].selected = false;
+                            iconLocations[9].selected = true;
+                            break;
                         default:
                             break;
                     }
@@ -239,7 +261,7 @@ void mouseEvents(int index){
                 }
             }
         }
-        // Not clicked
+            // Not clicked
         else {
             // Icons
             if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
@@ -313,7 +335,7 @@ void drawIcons(){
         SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
         SDL_DestroyTexture(texture);
 
-        if (iconLocations[index].hover) {
+        if (iconLocations[index].hover || iconLocations[index].selected) {
             SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
             SDL_RenderDrawRect(mainRender, &outlineRect);
         }
@@ -363,6 +385,8 @@ int main(int argc, char* args[]){
 
         objectLocation location = {0, 0, 0, 0, false, false};
         iconLocations = {10, location};
+        iconLocations[8].selected = true;
+
         colorLocations = {colorPalette.size(), std::vector<objectLocation>(colorPalette[0].size(), location)};
 
         bool mainLoopRunning = true;

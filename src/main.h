@@ -55,6 +55,7 @@ struct objectLocation {
 attribute selectedColors;
 
 std::vector<std::vector<rgb>> colorPalette;
+
 std::vector<objectLocation> iconLocations;
 std::vector<std::vector<objectLocation>> colorLocations;
 
@@ -62,6 +63,10 @@ std::vector<std::vector<bool>> pixels;
 std::vector<std::vector<attribute>> attributes;
 
 const int blockSize = 36;
+
+bool ink = true;
+bool paper = false;
+
 
 const char *imageList[] = {
         "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_zoom_in_black_18dp.bmp",
