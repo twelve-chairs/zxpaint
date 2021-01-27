@@ -1,10 +1,10 @@
-# ZX-Paint (alpha version)
+# ZX-Paint
 
 ![Build](https://github.com/twelvechairssoftware/zxpaint/workflows/Build/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=twelvechairssoftware_zxpaint&metric=alert_status)](https://sonarcloud.io/dashboard?id=twelvechairssoftware_zxpaint)
 [ ![Download - Debian](https://api.bintray.com/packages/twelvechairssoftware/Artifacts/zxpaint/images/download.svg) ](https://bintray.com/twelvechairssoftware/Artifacts/zxpaint/_latestVersion)
 ## Intro
-A **work-in-progress** open source project to simulate the [ZX Spectrum's screen drawing capabilities](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes), in the style of a simple modern-ish image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based colour schemes. Why? Simply because the [Sinclair ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum) is a unique monster from the 80s that has had such a massive impact on gaming, and demo scenes with its unique screen drawing capabilities. Even more honestly - we just wanted to become familiar with `SDL2` to enhance our skillset for future cross-platform game and medical simulation software, and just happen to be huge Speccy fans! 😊
+An open source project to simulate the Sinclair ZX Spectrum's screen drawing capabilities, in the style of a simple modern-ish image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based colour schemes. Why? Simply because the [ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum) is a unique monster from the 80s that has had such a massive impact on gaming, and demo scenes with its [quirky screen drawing capabilities](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes). Even more honestly - we just wanted to become more familiar with `SDL2` to enhance our skillset for future cross-platform medical simulation software, and just happen to be huge Speccy fans! This is no DPaint, but we hope that other Speccy enthusiasts will enjoy this, too 😊
 
 ![Screenshot](https://github.com/twelvechairssoftware/zxpaint/raw/master/images/zxpaint.png)
 
@@ -14,13 +14,15 @@ A **work-in-progress** open source project to simulate the [ZX Spectrum's screen
 3. Basic zoom in/out ✅
 4. Menu selector buttons (hover and click) ✅
 5. Attributes ✅
-6. Color/ink/paper selection 🚧
+6. Color/ink/paper selection ✅
 7. View panning (maybe scroll bars) 🌤️
 8. Basic shapes (line, circle) 🌤️
 9. Shape filling 🌤️
 10. Text 🌤️
-11. Save to file
+11. Save to file 🌤️
 12. Export to `scr` 🌤
+
+✅ - done; 🚧 - in-progress; 🌤️ -  some day, maybe;
 
 ## Open source libraries used:
  - SDL2 (https://www.libsdl.org)
