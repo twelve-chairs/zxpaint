@@ -10,12 +10,15 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     # Do something under 32 bits Windows NT platform
+    echo
 
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     # Do something under 64 bits Windows NT platform
+    echo
 
 else
     # Default
+    echo
 fi
 
 mkdir cmake-build-minsizerel
