@@ -14,6 +14,7 @@
 #include <random>
 #include <spdlog/spdlog.h>
 #include <SDL.h>
+#include <SDL_image.h>
 
 int randomInteger(int to, int from = 0);
 

@@ -81,4 +81,7 @@ const char *imageList[] = {
         "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_format_color_fill_black_18dp.bmp"
 };
 
+//std::vector<SDL_Surface*> icons;
+std::vector<SDL_Texture*> textures;
+
 #endif //SDL2TEST_MAIN_H

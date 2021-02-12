@@ -117,65 +117,70 @@ void drawGrid(int zoomLevel){
 }
 
 void drawColorOptions(){
-    int allColors = blockSize * colorPalette[0].size();
-    int startingPositionX = maxScreenWidth - 100;
-    int startingPositionY = (maxScreenHeight - allColors) - 20;
-    SDL_Rect fillRect;
+    try {
+        int allColors = blockSize * colorPalette[0].size();
+        int startingPositionX = maxScreenWidth - 100;
+        int startingPositionY = (maxScreenHeight - allColors) - 20;
+        SDL_Rect fillRect;
 
-    for (int index = 0; index <= 1; index++) {
-        int subindex = 0;
-        int offset = 0;
-        for (auto color: colorPalette[index]) {
-            offset = (subindex <= 0) ? 0 : 1;
-            fillRect = {
-                    (startingPositionX + index) + (index * blockSize),
-                    (startingPositionY + (subindex * blockSize)) + offset,
-                    blockSize,
-                    blockSize-offset
-            };
-            SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
-            SDL_RenderFillRect(mainRender, &fillRect);
+        for (int index = 0; index <= 1; index++) {
+            int subindex = 0;
+            int offset = 0;
+            for (auto color: colorPalette[index]) {
+                offset = (subindex <= 0) ? 0 : 1;
+                fillRect = {
+                        (startingPositionX + index) + (index * blockSize),
+                        (startingPositionY + (subindex * blockSize)) + offset,
+                        blockSize,
+                        blockSize - offset
+                };
+                SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
+                SDL_RenderFillRect(mainRender, &fillRect);
 
-            if (colorLocations[index][subindex].hover || colorLocations[index][subindex].selected) {
-                SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                SDL_RenderDrawRect(mainRender, &fillRect);
+                if (colorLocations[index][subindex].hover || colorLocations[index][subindex].selected) {
+                    SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                    SDL_RenderDrawRect(mainRender, &fillRect);
+                }
+
+                colorLocations.at(index).at(subindex) = {
+                        fillRect.x, fillRect.y, fillRect.x + blockSize, fillRect.y + blockSize
+                };
+
+                subindex++;
             }
-
-            colorLocations.at(index).at(subindex) = {
-                    fillRect.x, fillRect.y, fillRect.x + blockSize, fillRect.y + blockSize
-            };
-
-            subindex++;
         }
+
+        // Ink color
+        fillRect = {
+                iconLocations[8].x1 + 1,
+                iconLocations[8].y1 + 30,
+                blockSize - 2,
+                5
+        };
+        SDL_SetRenderDrawColor(mainRender,
+                               colorPalette[selectedColors.bright][selectedColors.ink].r,
+                               colorPalette[selectedColors.bright][selectedColors.ink].g,
+                               colorPalette[selectedColors.bright][selectedColors.ink].b,
+                               SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(mainRender, &fillRect);
+
+        // Paper color
+        fillRect = {
+                iconLocations[9].x1 + 1,
+                iconLocations[9].y1 + 30,
+                blockSize - 2,
+                5
+        };
+        SDL_SetRenderDrawColor(mainRender,
+                               colorPalette[selectedColors.bright][selectedColors.paper].r,
+                               colorPalette[selectedColors.bright][selectedColors.paper].g,
+                               colorPalette[selectedColors.bright][selectedColors.paper].b,
+                               SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(mainRender, &fillRect);
     }
-
-    // Ink color
-    fillRect = {
-            iconLocations[8].x1 + 1,
-            iconLocations[8].y1 + 30,
-            blockSize - 2,
-            5
-    };
-    SDL_SetRenderDrawColor(mainRender,
-                           colorPalette[selectedColors.bright][selectedColors.ink].r,
-                           colorPalette[selectedColors.bright][selectedColors.ink].g,
-                           colorPalette[selectedColors.bright][selectedColors.ink].b,
-                           SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(mainRender, &fillRect);
-
-    // Paper color
-    fillRect = {
-            iconLocations[9].x1 + 1,
-            iconLocations[9].y1 + 30,
-            blockSize - 2,
-            5
-    };
-    SDL_SetRenderDrawColor(mainRender,
-                           colorPalette[selectedColors.bright][selectedColors.paper].r,
-                           colorPalette[selectedColors.bright][selectedColors.paper].g,
-                           colorPalette[selectedColors.bright][selectedColors.paper].b,
-                           SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(mainRender, &fillRect);
+    catch (std::exception &e){
+        spdlog::error(e.what());
+    }
 }
 
 void mouseEvents(int index){
@@ -294,55 +299,55 @@ void mouseEvents(int index){
 
 // TODO: this is awful. Please revisit.
 void drawIcons(){
-    SDL_Surface *bitmapImage;
-    SDL_Rect bitmapLayer;
-    SDL_Texture *texture;
-    SDL_Rect outlineRect;
+    try {
+        SDL_Rect bitmapLayer;
+        SDL_Rect outlineRect;
 
-    int index = 0;
-    int startingPositionX;
-    int startingPositionY;
+        int index = 0;
+        int startingPositionX;
+        int startingPositionY;
 
-    for (auto &image: imageList){
-        bitmapImage = SDL_LoadBMP(image);
-        startingPositionX = maxScreenWidth - 100;
-        startingPositionY = 20 + (sizeof(imageList) / sizeof(imageList[0]));
-        if (index % 2 == 0){
-            bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
-            outlineRect = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+        for (SDL_Texture* texture: textures) {
+            startingPositionX = maxScreenWidth - 100;
+            startingPositionY = 20 + (sizeof(imageList) / sizeof(imageList[0]));
+            if (index % 2 == 0) {
+                bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
+                outlineRect = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
 
-            iconLocations[index].x1 = startingPositionX;
-            iconLocations[index].x2 = startingPositionX + blockSize;
+                iconLocations[index].x1 = startingPositionX;
+                iconLocations[index].x2 = startingPositionX + blockSize;
+            } else {
+                startingPositionY -= blockSize;
+                bitmapLayer = {startingPositionX + blockSize + 1, (index * blockSize) + startingPositionY, blockSize,
+                               blockSize};
+                outlineRect = {startingPositionX + blockSize + 1, (index * blockSize) + startingPositionY, blockSize,
+                               blockSize};
+
+                iconLocations[index].x1 = startingPositionX + blockSize + 1;
+                iconLocations[index].x2 = (startingPositionX + blockSize + 1) + blockSize;
+            }
+
+            iconLocations[index].y1 = (index * blockSize) + startingPositionY;
+            iconLocations[index].y2 = ((index * blockSize) + startingPositionY) + blockSize;
+
+            SDL_SetRenderDrawColor(mainRender, 255, 255, 255, SDL_ALPHA_OPAQUE);
+            SDL_RenderFillRect(mainRender, &outlineRect);
+
+            SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
+            SDL_DestroyTexture(texture);
+
+            if (iconLocations[index].hover || iconLocations[index].selected) {
+                SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                SDL_RenderDrawRect(mainRender, &outlineRect);
+            }
+
+            mouseEvents(index);
+
+            index++;
         }
-        else {
-            startingPositionY -= blockSize;
-            bitmapLayer = {startingPositionX + blockSize + 1, (index * blockSize) + startingPositionY, blockSize, blockSize};
-            outlineRect = {startingPositionX + blockSize + 1, (index * blockSize) + startingPositionY, blockSize, blockSize};
-
-            iconLocations[index].x1 = startingPositionX + blockSize + 1;
-            iconLocations[index].x2 = (startingPositionX + blockSize + 1) + blockSize;
-        }
-
-        iconLocations[index].y1 = (index * blockSize) + startingPositionY;
-        iconLocations[index].y2 = ((index * blockSize) + startingPositionY) + blockSize;
-
-        texture = SDL_CreateTextureFromSurface(mainRender, bitmapImage);
-        SDL_FreeSurface(bitmapImage);
-
-        SDL_SetRenderDrawColor(mainRender, 255, 255, 255, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(mainRender, &outlineRect);
-
-        SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
-        SDL_DestroyTexture(texture);
-
-        if (iconLocations[index].hover || iconLocations[index].selected) {
-            SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderDrawRect(mainRender, &outlineRect);
-        }
-
-        mouseEvents(index);
-
-        index++;
+    }
+    catch (std::exception &e){
+        spdlog::error(e.what());
     }
 }
 
@@ -382,6 +387,10 @@ int main(int argc, char* args[]){
                         rgb{255, 255, 255} //WHITE1
                 }
         };
+
+        for (auto &image: imageList) {
+            textures.push_back(IMG_LoadTexture(mainRender, image));
+        }
 
         objectLocation location = {0, 0, 0, 0, false, false};
         iconLocations = {10, location};
