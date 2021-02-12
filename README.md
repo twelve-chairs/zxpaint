@@ -27,6 +27,22 @@ An open source project to simulate the Sinclair ZX Spectrum's screen drawing cap
  - SDL2 (https://www.libsdl.org)
  - spdlog (https://github.com/gabime/spdlog)
 
+## Installation (Ubuntu)
+ ```bash
+ sudo apt-get update
+ sudo apt-get install -y build-essential git cmake curl libsdl2-2.0 libsdl2-dev libsdl2-image-dev
+ 
+ curl -L -O https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_32_1.deb
+ sudo dpkg -i conan-ubuntu-64_1_32_1.deb
+ 
+ conan profile new default --detect
+ conan profile update settings.compiler.libcxx=libstdc++11 default
+ conan install . --build=fmt --build=spdlog
+ 
+ cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
+ cmake --build . --target zxpaint -- -j 2
+ ```
+
 
 ## License
 
