@@ -359,7 +359,9 @@ void drawIcons(){
 void preLoadImages(){
     try {
         for (auto &image: imageList) {
-            SDL_Texture *texture = IMG_LoadTexture(mainRender, image);
+            std::string temp = "../../";
+            temp += image;
+            SDL_Texture *texture = IMG_LoadTexture(mainRender, temp.c_str());
             if (texture == nullptr) {
                 spdlog::error("Unable to load image: {}\n", SDL_GetError());
             }
