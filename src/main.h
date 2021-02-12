@@ -62,6 +62,8 @@ std::vector<std::vector<objectLocation>> colorLocations;
 std::vector<std::vector<bool>> pixels;
 std::vector<std::vector<attribute>> attributes;
 
+std::vector<SDL_Texture*> textures;
+
 const int blockSize = 36;
 
 bool ink = true;
@@ -80,8 +82,5 @@ const char *imageList[] = {
         "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_border_color_black_18dp.bmp",
         "/Users/vokamisair/Documents/dev/zxpaint/images/sharp_format_color_fill_black_18dp.bmp"
 };
-
-//std::vector<SDL_Surface*> icons;
-std::vector<SDL_Texture*> textures;
 
 #endif //SDL2TEST_MAIN_H

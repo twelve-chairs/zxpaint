@@ -14,7 +14,7 @@ bool initSDL() {
             return false;
         }
 
-        mainRender = SDL_CreateRenderer(mainWindow, 0, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+        mainRender = SDL_CreateRenderer(mainWindow, 0,  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         if (mainRender == nullptr) {
             spdlog::error(SDL_GetError());
             return false;
@@ -42,9 +42,15 @@ void exitSDL(){
 }
 
 void drawRightMenuPane(){
-    SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
-    SDL_SetRenderDrawColor(mainRender, 220, 220, 220, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(mainRender, &fillRect);
+    try {
+        SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
+        SDL_SetRenderDrawColor(mainRender, 220, 220, 220, SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(mainRender, &fillRect);
+    }
+    catch (std::exception &e){
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
+
+    }
 }
 
 void drawScreen(int zoomLevel){
@@ -79,7 +85,7 @@ void drawScreen(int zoomLevel){
         }
     }
     catch (std::exception &e){
-        spdlog::error(e.what());
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
     }
 }
 
@@ -88,7 +94,7 @@ void drawGrid(int zoomLevel){
         if (showGrid) {
             SDL_Rect fillRect;
             // Minor ticks
-            for (int y = 0; y <= pixels[0].size(); y++) {
+            for (int y = 0; y < pixels[0].size(); y++) {
                 for (int x = 0; x < pixels.size(); x++) {
                     fillRect = {x * zoomLevel, y * zoomLevel, zoomLevel, zoomLevel};
                     if (zoomLevel >= 4) {
@@ -99,7 +105,7 @@ void drawGrid(int zoomLevel){
                 }
             }
             // Major ticks
-            for (int y = 0; y <= attributes[0].size(); y++) {
+            for (int y = 0; y < attributes[0].size(); y++) {
                 for (int x = 0; x < attributes.size(); x++) {
                     fillRect = {x * attributeSize, y * attributeSize, attributeSize, attributeSize};
                     if (zoomLevel >= 4) {
@@ -112,7 +118,7 @@ void drawGrid(int zoomLevel){
         }
     }
     catch (std::exception &e){
-        spdlog::error(e.what());
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
     }
 }
 
@@ -179,7 +185,7 @@ void drawColorOptions(){
         SDL_RenderFillRect(mainRender, &fillRect);
     }
     catch (std::exception &e){
-        spdlog::error(e.what());
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
     }
 }
 
@@ -293,7 +299,7 @@ void mouseEvents(int index){
         }
     }
     catch (std::exception &e){
-        spdlog::error(e.what());
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
     }
 }
 
@@ -334,7 +340,6 @@ void drawIcons(){
             SDL_RenderFillRect(mainRender, &outlineRect);
 
             SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
-            SDL_DestroyTexture(texture);
 
             if (iconLocations[index].hover || iconLocations[index].selected) {
                 SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -347,7 +352,23 @@ void drawIcons(){
         }
     }
     catch (std::exception &e){
-        spdlog::error(e.what());
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
+    }
+}
+
+void preLoadImages(){
+    try {
+        for (auto &image: imageList) {
+            SDL_Texture *texture = IMG_LoadTexture(mainRender, image);
+            if (texture == nullptr) {
+                spdlog::error("Unable to load image: {}\n", SDL_GetError());
+            }
+            textures.push_back(texture);
+        }
+    }
+    catch (std::exception &e){
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
+
     }
 }
 
@@ -388,10 +409,6 @@ int main(int argc, char* args[]){
                 }
         };
 
-        for (auto &image: imageList) {
-            textures.push_back(IMG_LoadTexture(mainRender, image));
-        }
-
         objectLocation location = {0, 0, 0, 0, false, false};
         iconLocations = {10, location};
         iconLocations[8].selected = true;
@@ -407,6 +424,9 @@ int main(int argc, char* args[]){
             SDL_Event e;
 
             SDL_ShowCursor(1);
+
+            // Pre-load icons
+            preLoadImages();
 
             SDL_SetRenderDrawColor(mainRender, colorPalette[0][0].r, colorPalette[0][0].g, colorPalette[0][0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
@@ -454,7 +474,8 @@ int main(int argc, char* args[]){
 
                 endTick = SDL_GetPerformanceCounter();
                 float elapsedMS = (float)(endTick - startTick) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-//                spdlog::info("Elapsed ms: {}", elapsedMS);
+                spdlog::debug("{}ms", (int)elapsedMS);
+                SDL_Delay(elapsedMS);
             }
         }
 
@@ -462,6 +483,6 @@ int main(int argc, char* args[]){
         return 0;
     }
     catch (const std::exception &e){
-        spdlog::error("General error: {}", e.what());
+        spdlog::error("General error: {}\n\n{}", e.what(), SDL_GetError());
     }
 }
