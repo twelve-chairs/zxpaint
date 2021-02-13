@@ -53,10 +53,10 @@ void drawRightMenuPane(){
     }
 }
 
-void drawScreen(int zoomLevel){
+void drawScreen(){
     try {
         SDL_Rect fillRect;
-        int attributeGridSize = zoomLevel * 8;
+        int attributeGridSize = pixelSize * 8;
 
         for (int y = 0; y < attributes[0].size(); y++) {
             for (int x = 0; x < attributes.size(); x++) {
@@ -70,7 +70,7 @@ void drawScreen(int zoomLevel){
                 int start_x = x * 8;
                 for (int pixel_y = start_y; pixel_y <= start_y + 8; pixel_y++) {
                     for (int pixel_x = start_x; pixel_x < start_x + 8; pixel_x++) {
-                        fillRect = {pixel_x * zoomLevel, pixel_y * zoomLevel, zoomLevel, zoomLevel};
+                        fillRect = {pixel_x * pixelSize, pixel_y * pixelSize, pixelSize, pixelSize};
                         if (pixels[pixel_x][pixel_y]) {
                             temp = colorPalette[attr.bright][attr.ink];
                             SDL_SetRenderDrawColor(mainRender, temp.r, temp.g, temp.b, SDL_ALPHA_OPAQUE);
@@ -89,15 +89,15 @@ void drawScreen(int zoomLevel){
     }
 }
 
-void drawGrid(int zoomLevel){
+void drawGrid(){
     try {
         if (showGrid) {
             SDL_Rect fillRect;
             // Minor ticks
             for (int y = 0; y < pixels[0].size(); y++) {
                 for (int x = 0; x < pixels.size(); x++) {
-                    fillRect = {x * zoomLevel, y * zoomLevel, zoomLevel, zoomLevel};
-                    if (zoomLevel >= 4) {
+                    fillRect = {x * pixelSize, y * pixelSize, pixelSize, pixelSize};
+                    if (pixelSize >= 4) {
                         SDL_SetRenderDrawBlendMode(mainRender, SDL_BLENDMODE_BLEND);
                         SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 15);
                         SDL_RenderDrawRect(mainRender, &fillRect);
@@ -108,7 +108,7 @@ void drawGrid(int zoomLevel){
             for (int y = 0; y < attributes[0].size(); y++) {
                 for (int x = 0; x < attributes.size(); x++) {
                     fillRect = {x * attributeSize, y * attributeSize, attributeSize, attributeSize};
-                    if (zoomLevel >= 4) {
+                    if (pixelSize >= 4) {
                         SDL_SetRenderDrawBlendMode(mainRender, SDL_BLENDMODE_BLEND);
                         SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 30);
                         SDL_RenderDrawRect(mainRender, &fillRect);
@@ -370,7 +370,6 @@ void preLoadImages(){
     }
     catch (std::exception &e){
         spdlog::error("{}, {}", e.what(), SDL_GetError());
-
     }
 }
 
@@ -427,7 +426,6 @@ int main(int argc, char* args[]){
 
             SDL_ShowCursor(1);
 
-            // Pre-load icons
             preLoadImages();
 
             SDL_SetRenderDrawColor(mainRender, colorPalette[0][0].r, colorPalette[0][0].g, colorPalette[0][0].b, SDL_ALPHA_OPAQUE);
@@ -466,8 +464,8 @@ int main(int argc, char* args[]){
                 SDL_SetRenderDrawColor(mainRender, 255,255, 255, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(mainRender);
 
-                drawScreen(pixelSize);
-                drawGrid(pixelSize);
+                drawScreen();
+                drawGrid();
                 drawRightMenuPane();
                 drawIcons();
                 drawColorOptions();

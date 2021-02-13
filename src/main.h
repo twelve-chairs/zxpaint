@@ -71,16 +71,16 @@ bool paper = false;
 
 
 const char *imageList[] = {
-        "images/sharp_zoom_in_black_18dp.bmp",
-        "images/sharp_zoom_out_black_18dp.bmp",
-        "images/sharp_grid_on_black_18dp.bmp",
-        "images/sharp_grid_off_black_18dp.bmp",
-        "images/sharp_keyboard_arrow_up_black_18dp.bmp",
-        "images/sharp_keyboard_arrow_down_black_18dp.bmp",
-        "images/sharp_keyboard_arrow_left_black_18dp.bmp",
-        "images/sharp_keyboard_arrow_right_black_18dp.bmp",
-        "images/sharp_border_color_black_18dp.bmp",
-        "images/sharp_format_color_fill_black_18dp.bmp"
+        "res/sharp_zoom_in_black_18dp.bmp",
+        "res/sharp_zoom_out_black_18dp.bmp",
+        "res/sharp_grid_on_black_18dp.bmp",
+        "res/sharp_grid_off_black_18dp.bmp",
+        "res/sharp_keyboard_arrow_up_black_18dp.bmp",
+        "res/sharp_keyboard_arrow_down_black_18dp.bmp",
+        "res/sharp_keyboard_arrow_left_black_18dp.bmp",
+        "res/sharp_keyboard_arrow_right_black_18dp.bmp",
+        "res/sharp_border_color_black_18dp.bmp",
+        "res/sharp_format_color_fill_black_18dp.bmp"
 };
 
 #endif //SDL2TEST_MAIN_H
