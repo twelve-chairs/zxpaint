@@ -238,12 +238,10 @@ void mouseEvents(int index){
                             break;
                         case 8:
                             ink = true;
-                            paper = false;
                             iconLocations[8].selected = true;
                             iconLocations[9].selected = false;
                             break;
                         case 9:
-                            paper = true;
                             ink = false;
                             iconLocations[8].selected = false;
                             iconLocations[9].selected = true;
@@ -377,6 +375,9 @@ int main(int argc, char* args[]){
     try {
         startTick = SDL_GetPerformanceCounter();
         endTick = startTick;
+
+        ink = true;
+//        paper = false;
 
         selectedColors = {0, 7, true};
 
