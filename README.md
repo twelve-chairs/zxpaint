@@ -27,22 +27,40 @@ An open source project to simulate the Sinclair ZX Spectrum's screen drawing cap
  - SDL2 (https://www.libsdl.org)
  - spdlog (https://github.com/gabime/spdlog)
 
-## Installation (Ubuntu)
- ```shell
- sudo apt-get update -y
- sudo apt-get install -y build-essential python3-pip git cmake curl libsdl2-2.0 libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
- sudo pip3 install conan
- git clone https://github.com/twelvechairssoftware/zxpaint.git && cd zxpaint
- conan profile new default --detect
- conan profile update settings.compiler.libcxx=libstdc++11 default
- conan install . --build=fmt --build=spdlog
- cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
- cmake --build . --target zxpaint -- -j 2
- ./bin/zxpaint 
- 
+## Installation
+Ubuntu
+```shell
+sudo apt-get update -y
+sudo apt-get install -y build-essential python3-pip git cmake curl libsdl2-2.0 libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+```
+Fedora
+```shell
+dnf groupinstall "Development Tools" -y
+sudo dnf update -y
+sudo dnf install -y cmake SDL2 SDL2-devel SDL2_image SDL2_image-devel SDL2_ttf SDL2_ttf-devel
+```
+MacOS
+```shell
+sudo xcode-select --install
+brew install python cmake sdl2 sdl2_image sdl2_ttf
+```
+
+All 
+```shell
+sudo pip3 install conan
+git clone https://github.com/twelvechairssoftware/zxpaint.git && cd zxpaint
+conan profile new default --detect
+conan profile update settings.compiler.libcxx=libstdc++11 default
+conan install . --build=fmt --build=spdlog
+cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
+cmake --build . --target zxpaint -- -j 2
+./bin/zxpaint &
+```
+
+Windows 10
+```shell
+COMING SOON
  ```
-
-
 ## License
 
 <img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
