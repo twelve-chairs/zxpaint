@@ -7,7 +7,29 @@
 
 #include "common.h"
 #include "StarFish.h"
+#include "../res/iconsup.xpm"
+#include "../res/iconsdown.xpm"
+#include "../res/iconsleft.xpm"
+#include "../res/iconsright.xpm"
+#include "../res/iconsin.xpm"
+#include "../res/iconsout.xpm"
+#include "../res/iconsink.xpm"
+#include "../res/iconspaper.xpm"
+#include "../res/iconson.xpm"
+#include "../res/iconsoff.xpm"
 
+const auto icons = {
+        iconsin,
+        iconsout,
+        iconson,
+        iconsoff,
+        iconsup,
+        iconsdown,
+        iconsleft,
+        iconsright,
+        iconsink,
+        iconspaper
+};
 
 int maxScreenWidth = 1154;
 int maxScreenHeight = 768;
@@ -69,18 +91,5 @@ const int blockSize = 36;
 bool ink = true;
 bool paper = false;
 
-
-const char *imageList[] = {
-        "res/sharp_zoom_in_black_18dp.bmp",
-        "res/sharp_zoom_out_black_18dp.bmp",
-        "res/sharp_grid_on_black_18dp.bmp",
-        "res/sharp_grid_off_black_18dp.bmp",
-        "res/sharp_keyboard_arrow_up_black_18dp.bmp",
-        "res/sharp_keyboard_arrow_down_black_18dp.bmp",
-        "res/sharp_keyboard_arrow_left_black_18dp.bmp",
-        "res/sharp_keyboard_arrow_right_black_18dp.bmp",
-        "res/sharp_border_color_black_18dp.bmp",
-        "res/sharp_format_color_fill_black_18dp.bmp"
-};
 
 #endif //SDL2TEST_MAIN_H

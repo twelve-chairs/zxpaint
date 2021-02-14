@@ -315,7 +315,7 @@ void drawIcons(){
 
         for (SDL_Texture* texture: textures) {
             startingPositionX = maxScreenWidth - 100;
-            startingPositionY = 20 + (sizeof(imageList) / sizeof(imageList[0]));
+            startingPositionY = 20 + (icons.size() / sizeof(icons));
             if (index % 2 == 0) {
                 bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
                 outlineRect = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
@@ -358,13 +358,13 @@ void drawIcons(){
 
 void preLoadImages(){
     try {
-        for (auto &image: imageList) {
-            std::string temp = "../../";
-            temp += image;
-            SDL_Texture *texture = IMG_LoadTexture(mainRender, temp.c_str());
+        for (auto &icon: icons) {
+            SDL_Surface *surface = IMG_ReadXPMFromArray((char **) icon);
+            SDL_Texture *texture = SDL_CreateTextureFromSurface(mainRender, surface);
             if (texture == nullptr) {
                 spdlog::error("Unable to load image: {}\n", SDL_GetError());
             }
+            SDL_FreeSurface(surface);
             textures.push_back(texture);
         }
     }
