@@ -49,7 +49,6 @@ void drawRightMenuPane(){
     }
     catch (std::exception &e){
         spdlog::error("{}, {}", e.what(), SDL_GetError());
-
     }
 }
 
@@ -301,7 +300,6 @@ void mouseEvents(int index){
     }
 }
 
-// TODO: this is awful. Please revisit.
 void drawIcons(){
     try {
         SDL_Rect bitmapLayer;
