@@ -2,11 +2,12 @@
 // Created by VokamisAir on 11/29/20.
 //
 
-#ifndef SDL2TEST_MAIN_H
-#define SDL2TEST_MAIN_H
+#ifndef ZXPAINT_MAIN_H
+#define ZXPAINT_MAIN_H
 
 #include "common.h"
-#include "StarFish.h"
+
+// BEGIN: Include all images
 #include "../res/iconsin.xpm"
 #include "../res/iconsout.xpm"
 #include "../res/iconson.xpm"
@@ -30,6 +31,8 @@ const auto icons = {
         &iconsink,
         &iconspaper
 };
+// END: Include all images
+
 
 int maxScreenWidth = 1154;
 int maxScreenHeight = 768;
@@ -37,6 +40,10 @@ int maxScreenHeight = 768;
 static bool showGrid = true;
 static int pixelSize = 4;
 int attributeSize = pixelSize * 8;
+
+const int blockSize = 36;
+
+bool ink;
 
 bool initSDL();
 void exitSDL();
@@ -46,8 +53,10 @@ SDL_Renderer *mainRender = nullptr;
 
 Uint64 startTick;
 Uint64 endTick;
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
-struct mouseLocation {
+struct {
     int x;
     int y;
     bool clicked;
@@ -86,9 +95,5 @@ std::vector<std::vector<attribute>> attributes;
 
 std::vector<SDL_Texture*> textures;
 
-const int blockSize = 36;
 
-bool ink;
-
-
-#endif //SDL2TEST_MAIN_H
+#endif //ZXPAINT_MAIN_H

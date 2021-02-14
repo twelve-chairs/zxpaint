@@ -2,8 +2,8 @@
 // Created by VokamisAir on 1/9/21.
 //
 
-#ifndef SDL2TEST_COMMON_H
-#define SDL2TEST_COMMON_H
+#ifndef ZXPAINT_COMMON_H
+#define ZXPAINT_COMMON_H
 
 
 #include <iostream>
@@ -19,4 +19,4 @@
 int randomInteger(int to, int from = 0);
 
 
-#endif //SDL2TEST_COMMON_H
+#endif //ZXPAINT_COMMON_H

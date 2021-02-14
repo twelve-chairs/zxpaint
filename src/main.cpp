@@ -14,7 +14,7 @@ bool initSDL() {
             return false;
         }
 
-        mainRender = SDL_CreateRenderer(mainWindow, 0,  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        mainRender = SDL_CreateRenderer(mainWindow, 0,  SDL_RENDERER_ACCELERATED);
         if (mainRender == nullptr) {
             spdlog::error(SDL_GetError());
             return false;
@@ -372,17 +372,13 @@ void preLoadImages(){
 int main(int argc, char* args[]){
     try {
         startTick = SDL_GetPerformanceCounter();
-        endTick = startTick;
 
         ink = true;
-//        paper = false;
-
-        selectedColors = {0, 7, true};
 
         // 256x192 (1x1) pixels
         pixels = {256, std::vector<bool>(192,false)};
         // 32x24 (8x8) attributes
-        attributes = {32, std::vector<attribute>(24, selectedColors)};
+        attributes = {32, std::vector<attribute>(24, {0, 7, true})};
 
         selectedColors = {0, 2, true};
 
@@ -409,7 +405,14 @@ int main(int argc, char* args[]){
                 }
         };
 
-        objectLocation location = {0, 0, 0, 0, false, false};
+        objectLocation location = {
+                0,
+                0,
+                0,
+                0,
+                false,
+                false
+        };
         iconLocations = {10, location};
         iconLocations[8].selected = true;
 
@@ -418,7 +421,7 @@ int main(int argc, char* args[]){
         bool mainLoopRunning = true;
 
         if (!initSDL()) {
-            spdlog::error(SDL_GetError());
+            spdlog::error("Error initializing SDL - {}", SDL_GetError());
         }
         else {
             SDL_Event e;
@@ -473,8 +476,16 @@ int main(int argc, char* args[]){
 
                 endTick = SDL_GetPerformanceCounter();
                 float elapsedMS = (float)(endTick - startTick) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-                spdlog::debug("{}ms", (int)elapsedMS);
-                SDL_Delay(elapsedMS);
+//                spdlog::debug("{}ms", (int)elapsedMS);
+
+                float elapsed = (endTick - startTick) / (float)SDL_GetPerformanceFrequency();
+//                spdlog::info("Current FPS: {}", 1.0f / elapsed);
+                if (1.0f / elapsed > SCREEN_FPS){
+                    SDL_Delay(floor(16.666f - elapsedMS));
+                }
+                else {
+                    SDL_Delay(elapsedMS/2);
+                }
             }
         }
 
@@ -483,5 +494,7 @@ int main(int argc, char* args[]){
     }
     catch (const std::exception &e){
         spdlog::error("General error: {}\n\n{}", e.what(), SDL_GetError());
+        exitSDL();
+        return 1;
     }
 }

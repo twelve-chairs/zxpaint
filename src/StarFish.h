@@ -2,8 +2,8 @@
 // Created by VokamisAir on 1/8/21.
 //
 
-#ifndef SDL2TEST_STARFISH_H
-#define SDL2TEST_STARFISH_H
+#ifndef ZXPAINT_STARFISH_H
+#define ZXPAINT_STARFISH_H
 
 #include "common.h"
 
@@ -24,4 +24,4 @@ public:
 };
 
 
-#endif //SDL2TEST_STARFISH_H
+#endif //ZXPAINT_STARFISH_H

@@ -28,7 +28,7 @@ An open source project to simulate the Sinclair ZX Spectrum's screen drawing cap
  - spdlog (https://github.com/gabime/spdlog)
 
 ## Installation
-Ubuntu
+Ubuntu (x86), Raspberry Pi (armv7l)
 ```shell
 sudo apt-get update -y
 sudo apt-get install -y build-essential python3-pip git cmake curl libsdl2-2.0 libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
