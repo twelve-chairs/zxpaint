@@ -50,7 +50,8 @@ All
 sudo pip3 install conan
 git clone https://github.com/twelvechairssoftware/zxpaint.git && cd zxpaint
 conan profile new default --detect
-conan profile update settings.compiler.libcxx=libstdc++11 default
+conan profile update settings.compiler.libcxx=libstdc++11 default # - Linux
+# conan profile update settings.compiler.libcxx=libc++ default # - MacOS
 conan install . --build=fmt --build=spdlog
 cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
 cmake --build . --target zxpaint -- -j 2
