@@ -48,14 +48,14 @@ brew install python cmake sdl2 sdl2_image sdl2_ttf
 All 
 ```shell
 sudo pip3 install conan
-git clone https://github.com/twelvechairssoftware/zxpaint.git && cd zxpaint
+git clone https://github.com/twelvechairssoftware/zxpaint.git && cd ios
+conan remove "*" -s -f -b
 conan profile new default --detect
-conan profile update settings.compiler.libcxx=libstdc++11 default # - Linux
-# conan profile update settings.compiler.libcxx=libc++ default # - MacOS
+conan profile update settings.compiler.libcxx=libstdc++11 default # - Linux only
 conan install . --build=fmt --build=spdlog
 cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
-cmake --build . --target zxpaint -- -j 2
-./bin/zxpaint &
+cmake --build . --target ios -- -j 2
+./bin/ios &
 ```
 
 Windows 10

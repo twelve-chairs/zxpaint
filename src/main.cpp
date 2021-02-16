@@ -14,7 +14,7 @@ bool initSDL() {
             return false;
         }
 
-        mainRender = SDL_CreateRenderer(mainWindow, 0,  SDL_RENDERER_ACCELERATED);
+        mainRender = SDL_CreateRenderer(mainWindow, 0,  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         if (mainRender == nullptr) {
             spdlog::error(SDL_GetError());
             return false;
@@ -369,10 +369,13 @@ void preLoadImages(){
     }
 }
 
+void redraw(){
+    drawRightMenuPane();
+    drawColorOptions();
+}
+
 int main(int argc, char* args[]){
     try {
-        startTick = SDL_GetPerformanceCounter();
-
         ink = true;
 
         // 256x192 (1x1) pixels
@@ -433,6 +436,8 @@ int main(int argc, char* args[]){
             SDL_SetRenderDrawColor(mainRender, colorPalette[0][0].r, colorPalette[0][0].g, colorPalette[0][0].b, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(mainRender);
 
+//            redraw();
+
             while (mainLoopRunning) {
                 startTick = SDL_GetPerformanceCounter();
                 // Get events for main loop
@@ -468,24 +473,10 @@ int main(int argc, char* args[]){
 
                 drawScreen();
                 drawGrid();
-                drawRightMenuPane();
+                redraw();
                 drawIcons();
-                drawColorOptions();
 
                 SDL_RenderPresent(mainRender);
-
-                endTick = SDL_GetPerformanceCounter();
-                float elapsedMS = (float)(endTick - startTick) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-//                spdlog::debug("{}ms", (int)elapsedMS);
-
-                float elapsed = (endTick - startTick) / (float)SDL_GetPerformanceFrequency();
-//                spdlog::info("Current FPS: {}", 1.0f / elapsed);
-                if (1.0f / elapsed > SCREEN_FPS){
-                    SDL_Delay(floor(16.666f - elapsedMS));
-                }
-                else {
-                    SDL_Delay(elapsedMS/2);
-                }
             }
         }
 
