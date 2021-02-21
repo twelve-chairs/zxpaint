@@ -50,6 +50,8 @@ void exitSDL();
 
 SDL_Window *mainWindow = nullptr;
 SDL_Renderer *mainRender = nullptr;
+SDL_Rect mainGrid;
+SDL_Rect mainMenu;
 
 Uint64 startTick;
 Uint64 endTick;

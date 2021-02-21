@@ -43,7 +43,7 @@ void exitSDL(){
 
 void drawRightMenuPane(){
     try {
-        SDL_Rect fillRect = {maxScreenWidth - 130, 0, 130, maxScreenHeight};
+        SDL_Rect fillRect = {0, 0, 130, maxScreenHeight};
         SDL_SetRenderDrawColor(mainRender, 220, 220, 220, SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(mainRender, &fillRect);
     }
@@ -124,7 +124,7 @@ void drawGrid(){
 void drawColorOptions(){
     try {
         int allColors = blockSize * colorPalette[0].size();
-        int startingPositionX = maxScreenWidth - 100;
+        int startingPositionX = 30;
         int startingPositionY = (maxScreenHeight - allColors) - 20;
         SDL_Rect fillRect;
 
@@ -248,7 +248,8 @@ void mouseEvents(int index){
                         default:
                             break;
                     }
-                } else {
+                }
+                else {
                     iconLocations[index].selected = false;
                 }
 
@@ -310,7 +311,7 @@ void drawIcons(){
         int startingPositionY;
 
         for (SDL_Texture* texture: textures) {
-            startingPositionX = maxScreenWidth - 100;
+            startingPositionX = 30;
             startingPositionY = 20 + (icons.size() / sizeof(icons));
             if (index % 2 == 0) {
                 bitmapLayer = {startingPositionX, (index * blockSize) + startingPositionY, blockSize, blockSize};
@@ -332,6 +333,7 @@ void drawIcons(){
             iconLocations[index].y1 = (index * blockSize) + startingPositionY;
             iconLocations[index].y2 = ((index * blockSize) + startingPositionY) + blockSize;
 
+            // Icon background color
             SDL_SetRenderDrawColor(mainRender, 255, 255, 255, SDL_ALPHA_OPAQUE);
             SDL_RenderFillRect(mainRender, &outlineRect);
 
@@ -341,8 +343,6 @@ void drawIcons(){
                 SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
                 SDL_RenderDrawRect(mainRender, &outlineRect);
             }
-
-            mouseEvents(index);
 
             index++;
         }
@@ -369,114 +369,134 @@ void preLoadImages(){
     }
 }
 
-void redraw(){
+void redrawMenu(){
+    SDL_RenderSetViewport(mainRender, &mainMenu);
     drawRightMenuPane();
     drawColorOptions();
+    drawIcons();
+}
+
+void redrawMainScreen(){
+    SDL_RenderSetViewport(mainRender, &mainGrid);
+    drawScreen();
+    drawGrid();
+}
+
+void windowResized(){
+    mainGrid = {0, 0, maxScreenWidth - 130, maxScreenHeight};
+    mainMenu = {maxScreenWidth - 129, 0, 130, maxScreenHeight};
+}
+
+void redraw(){
+    SDL_SetRenderDrawColor(mainRender, 255,255, 255, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(mainRender);
+    redrawMainScreen();
+    redrawMenu();
+    SDL_RenderPresent(mainRender);
+}
+
+
+void reset(){
+    ink = true;
+
+    mainGrid = {0, 0, maxScreenWidth - 130, maxScreenHeight};
+    mainMenu = {maxScreenWidth - 129, 0, 130, maxScreenHeight};
+
+    // 256x192 (1x1) pixels
+    pixels = {256, std::vector<bool>(192,false)};
+    // 32x24 (8x8) attributes
+    attributes = {32, std::vector<attribute>(24, {0, 7, true})};
+
+    selectedColors = {0, 2, true};
+
+    colorPalette = {
+            {
+                    rgb{0, 0, 0}, //BLACK0
+                    rgb{0, 0, 215}, //BLUE0
+                    rgb{215, 0, 0}, //RED0
+                    rgb{215, 0, 215}, //MAGENTA0
+                    rgb{0, 215, 0}, //GREEN0
+                    rgb{0, 215, 215}, //CYAN0
+                    rgb{215, 215, 0}, //YELLOW0
+                    rgb{215, 215, 215} //WHITE0
+            },
+            {
+                    rgb{0, 0, 0}, //BLACK1
+                    rgb{0, 0, 255}, //BLUE1
+                    rgb{255, 0, 0}, //RED1
+                    rgb{255, 0, 255}, //MAGENTA1
+                    rgb{0, 255, 0}, //GREEN1
+                    rgb{0, 255, 255}, //CYAN1
+                    rgb{255, 255, 0}, //YELLOW1
+                    rgb{255, 255, 255} //WHITE1
+            }
+    };
+
+    objectLocation location = {
+            0,
+            0,
+            0,
+            0,
+            false,
+            false
+    };
+
+    iconLocations = {10, location};
+    iconLocations[8].selected = true;
+
+    colorLocations = {colorPalette.size(), std::vector<objectLocation>(colorPalette[0].size(), location)};
+
+    preLoadImages();
+
+    redraw();
 }
 
 int main(int argc, char* args[]){
     try {
-        ink = true;
-
-        // 256x192 (1x1) pixels
-        pixels = {256, std::vector<bool>(192,false)};
-        // 32x24 (8x8) attributes
-        attributes = {32, std::vector<attribute>(24, {0, 7, true})};
-
-        selectedColors = {0, 2, true};
-
-        colorPalette = {
-                {
-                        rgb{0, 0, 0}, //BLACK0
-                        rgb{0, 0, 215}, //BLUE0
-                        rgb{215, 0, 0}, //RED0
-                        rgb{215, 0, 215}, //MAGENTA0
-                        rgb{0, 215, 0}, //GREEN0
-                        rgb{0, 215, 215}, //CYAN0
-                        rgb{215, 215, 0}, //YELLOW0
-                        rgb{215, 215, 215} //WHITE0
-                },
-                {
-                        rgb{0, 0, 0}, //BLACK1
-                        rgb{0, 0, 255}, //BLUE1
-                        rgb{255, 0, 0}, //RED1
-                        rgb{255, 0, 255}, //MAGENTA1
-                        rgb{0, 255, 0}, //GREEN1
-                        rgb{0, 255, 255}, //CYAN1
-                        rgb{255, 255, 0}, //YELLOW1
-                        rgb{255, 255, 255} //WHITE1
-                }
-        };
-
-        objectLocation location = {
-                0,
-                0,
-                0,
-                0,
-                false,
-                false
-        };
-        iconLocations = {10, location};
-        iconLocations[8].selected = true;
-
-        colorLocations = {colorPalette.size(), std::vector<objectLocation>(colorPalette[0].size(), location)};
-
-        bool mainLoopRunning = true;
-
         if (!initSDL()) {
             spdlog::error("Error initializing SDL - {}", SDL_GetError());
         }
         else {
             SDL_Event e;
-
             SDL_ShowCursor(1);
 
-            preLoadImages();
+            reset();
 
-            SDL_SetRenderDrawColor(mainRender, colorPalette[0][0].r, colorPalette[0][0].g, colorPalette[0][0].b, SDL_ALPHA_OPAQUE);
-            SDL_RenderClear(mainRender);
-
-//            redraw();
+            bool mainLoopRunning = true;
 
             while (mainLoopRunning) {
-                startTick = SDL_GetPerformanceCounter();
-                // Get events for main loop
                 while (SDL_PollEvent(&e) != 0) {
                     switch (e.type){
-                        case SDL_QUIT:
-                            spdlog::info("SDL exiting");
-                            mainLoopRunning = false;
+                        case SDL_MOUSEMOTION:
+                            SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
+                            mouseEvents(1);
+                            break;
+                        case SDL_MOUSEBUTTONDOWN:
+                            mouseLocation.clicked = true;
+                            mouseEvents(0);
+                            break;
+                        case SDL_MOUSEBUTTONUP:
+                            mouseLocation.clicked = false;
+                            mouseEvents(2);
                             break;
                         case SDL_WINDOWEVENT:
                             if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
                                 maxScreenWidth = e.window.data1;
                                 maxScreenHeight = e.window.data2;
+                                windowResized();
                             }
                             break;
-                        case SDL_MOUSEBUTTONDOWN:
-                            mouseLocation.clicked = true;
-                            break;
-                        case SDL_MOUSEBUTTONUP:
-                            mouseLocation.clicked = false;
-                            break;
-                        case SDL_MOUSEMOTION:
-                            SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
-                            break;
                         case SDL_KEYDOWN:
+                            spdlog::debug("key");
+                            break;
+                        case SDL_QUIT:
+                            spdlog::info("SDL exiting");
+                            mainLoopRunning = false;
                             break;
                     }
+                    redraw();
                 }
-
-                // IMPORTANT: clear render
-                SDL_SetRenderDrawColor(mainRender, 255,255, 255, SDL_ALPHA_OPAQUE);
-                SDL_RenderClear(mainRender);
-
-                drawScreen();
-                drawGrid();
-                redraw();
-                drawIcons();
-
-                SDL_RenderPresent(mainRender);
+                SDL_Delay(10);
             }
         }
 
