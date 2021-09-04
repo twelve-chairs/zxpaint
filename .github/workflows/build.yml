@@ -31,16 +31,7 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential git cmake curl libsdl2-2.0 libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
-        curl -L -O https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_32_1.deb
-        sudo dpkg -i conan-ubuntu-64_1_32_1.deb
-
-    - name: Libs
-      shell: bash
-      run: |
-        conan profile new default --detect
-        conan profile update settings.compiler.libcxx=libstdc++11 default
-        conan install . --build=spdlog
+        sudo apt-get install -y build-essential git cmake curl libsdl2-image-dev libsdl2-ttf-dev
 
     - name: Sonar Build Wrapper
       shell: bash
@@ -56,8 +47,3 @@ jobs:
         curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-linux.zip
         unzip sonar-scanner-cli-4.4.0.2170-linux.zip
         sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
-        
-    - name: Bintray
-      shell: bash
-      run: |
-        curl -T bin/zxpaint -utwelvechairssoftware:$BITRAY_KEY https://api.bintray.com/content/twelvechairssoftware/Artifacts/zxpaint/0/zxpaint-debian
