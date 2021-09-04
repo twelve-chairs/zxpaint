@@ -31,8 +31,8 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential git cmake curl libsdl2-image-dev libsdl2-ttf-dev
-
+        sudo apt-get install -y build-essential git cmake curl pip libsdl2-image-dev libsdl2-ttf-dev
+        pip install conan
     - name: Sonar Build Wrapper
       shell: bash
       run: |
