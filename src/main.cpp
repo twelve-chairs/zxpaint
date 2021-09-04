@@ -14,7 +14,7 @@ bool initSDL() {
             return false;
         }
 
-        mainRender = SDL_CreateRenderer(mainWindow, 0,  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        mainRender = SDL_CreateRenderer(mainWindow, 0,  SDL_RENDERER_ACCELERATED);
         if (mainRender == nullptr) {
             spdlog::error(SDL_GetError());
             return false;
@@ -128,30 +128,26 @@ void drawColorOptions(){
         int startingPositionY = (maxScreenHeight - allColors) - 20;
         SDL_Rect fillRect;
 
-        for (int index = 0; index <= 1; index++) {
-            int subindex = 0;
-            int offset = 0;
-            for (auto color: colorPalette[index]) {
-                offset = (subindex <= 0) ? 0 : 1;
+        for (int index = 0; index < colorLocations.size(); index++) {
+//            int offset = 0;
+            for (int subindex = 0; subindex < colorLocations[index].size(); subindex++) {
+//                offset = (subindex <= 0) ? 0 : 1;
                 fillRect = {
                         (startingPositionX + index) + (index * blockSize),
-                        (startingPositionY + (subindex * blockSize)) + offset,
+                        (startingPositionY + (subindex * blockSize)),
                         blockSize,
-                        blockSize - offset
+                        blockSize
                 };
-                SDL_SetRenderDrawColor(mainRender, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
+                SDL_SetRenderDrawColor(mainRender,
+                                       colorPalette[index][subindex].r,
+                                       colorPalette[index][subindex].g,
+                                       colorPalette[index][subindex].b,
+                                       SDL_ALPHA_OPAQUE);
                 SDL_RenderFillRect(mainRender, &fillRect);
-
-                if (colorLocations[index][subindex].hover || colorLocations[index][subindex].selected) {
-                    SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                    SDL_RenderDrawRect(mainRender, &fillRect);
-                }
 
                 colorLocations.at(index).at(subindex) = {
                         fillRect.x, fillRect.y, fillRect.x + blockSize, fillRect.y + blockSize
                 };
-
-                subindex++;
             }
         }
 
@@ -182,119 +178,6 @@ void drawColorOptions(){
                                colorPalette[selectedColors.bright][selectedColors.paper].b,
                                SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(mainRender, &fillRect);
-    }
-    catch (std::exception &e){
-        spdlog::error("{}, {}", e.what(), SDL_GetError());
-    }
-}
-
-void mouseEvents(int index){
-    try {
-        if (mouseLocation.clicked) {
-            // Clicked on main board
-            if (mouseLocation.x / pixelSize < pixels.size()) {
-                auto attr_copy = attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8];
-                if (ink){
-                    pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
-                    attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
-                            selectedColors.ink,
-                            attr_copy.paper,
-                            selectedColors.bright
-                    };
-                }
-                else {
-                    attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
-                            attr_copy.ink,
-                            selectedColors.paper,
-                            attr_copy.bright
-                    };
-                }
-            }
-                // Clicked menu bar
-            else {
-                // Check icons
-                if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
-                    (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)) {
-                    iconLocations[index].selected = true;
-
-                    // Click events
-                    switch (index) {
-                        case 0:
-                            if (pixelSize <= 200) {
-                                pixelSize += 1;
-                            }
-                            break;
-                        case 1:
-                            if (pixelSize >= 2) {
-                                pixelSize -= 1;
-                            }
-                            break;
-                        case 2:
-                            showGrid = true;
-                            break;
-                        case 3:
-                            showGrid = false;
-                            break;
-                        case 8:
-                            ink = true;
-                            iconLocations[8].selected = true;
-                            iconLocations[9].selected = false;
-                            break;
-                        case 9:
-                            ink = false;
-                            iconLocations[8].selected = false;
-                            iconLocations[9].selected = true;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else {
-                    iconLocations[index].selected = false;
-                }
-
-                // Check colours
-                for (int n = 0; n < colorLocations.size(); n++) {
-                    for (int m = 0; m < colorLocations[n].size(); m++) {
-                        if ((colorLocations[n][m].x1 <= mouseLocation.x && mouseLocation.x <= colorLocations[n][m].x2) &&
-                            (colorLocations[n][m].y1 <= mouseLocation.y && mouseLocation.y <= colorLocations[n][m].y2)) {
-                            colorLocations[n][m].selected = true;
-                            selectedColors.ink = randomInteger(7);
-                            selectedColors.paper = randomInteger(7);
-                            selectedColors.bright = randomInteger(1);
-                        }
-                        else {
-                            colorLocations[n][m].selected = false;
-                        }
-                    }
-                }
-            }
-        }
-            // Not clicked
-        else {
-            // Icons
-            if ((iconLocations[index].x1 <= mouseLocation.x && mouseLocation.x <= iconLocations[index].x2) &&
-                (iconLocations[index].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[index].y2)) {
-                iconLocations[index].hover = true;
-            }
-            else {
-                iconLocations[index].hover = false;
-            }
-
-            // Colors
-            for (int n = 0; n < 2; n++) {
-                for (int m = 0; m < 8; m++) {
-                    if ((colorLocations[n][m].x1 <= mouseLocation.x && mouseLocation.x <= colorLocations[n][m].x2) &&
-                        (colorLocations[n][m].y1 <= mouseLocation.y && mouseLocation.y <= colorLocations[n][m].y2)) {
-                        colorLocations[n][m].hover = true;
-                    }
-                    else {
-                        colorLocations[n][m].hover = false;
-
-                    }
-                }
-            }
-        }
     }
     catch (std::exception &e){
         spdlog::error("{}, {}", e.what(), SDL_GetError());
@@ -339,6 +222,7 @@ void drawIcons(){
 
             SDL_RenderCopy(mainRender, texture, nullptr, &bitmapLayer);
 
+            // Icon hover
             if (iconLocations[index].hover || iconLocations[index].selected) {
                 SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
                 SDL_RenderDrawRect(mainRender, &outlineRect);
@@ -369,11 +253,17 @@ void preLoadImages(){
     }
 }
 
+void drawStarFish(){
+    auto *fish = new StarFish;
+    fish->animation(mainRender, randomInteger(500), randomInteger(500), randomInteger(500), randomInteger(500));
+}
+
+
 void redrawMenu(){
     SDL_RenderSetViewport(mainRender, &mainMenu);
     drawRightMenuPane();
-    drawColorOptions();
     drawIcons();
+    drawColorOptions();
 }
 
 void redrawMainScreen(){
@@ -382,25 +272,188 @@ void redrawMainScreen(){
     drawGrid();
 }
 
-void windowResized(){
-    mainGrid = {0, 0, maxScreenWidth - 130, maxScreenHeight};
-    mainMenu = {maxScreenWidth - 129, 0, 130, maxScreenHeight};
-}
-
 void redraw(){
     SDL_SetRenderDrawColor(mainRender, 255,255, 255, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(mainRender);
     redrawMainScreen();
     redrawMenu();
+    drawStarFish();
     SDL_RenderPresent(mainRender);
 }
 
+void clearIconHover(){
+    for (auto &iconLocation : iconLocations){
+        iconLocation.hover = false;
+    }
+}
 
-void reset(){
+int iconHoverIndex(){
+    int viewportOffset = maxScreenWidth - MENUWIDTH;
+    clearIconHover();
+
+    for (int i=0; i < iconLocations.size(); i++){
+        if ((viewportOffset + iconLocations[i].x1 <= mouseLocation.x && mouseLocation.x <= viewportOffset + iconLocations[i].x2) &&
+            (iconLocations[i].y1 <= mouseLocation.y && mouseLocation.y <= iconLocations[i].y2)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void clearColorHover(){
+    for (auto &colorLocation : colorLocations){
+        for (auto &location : colorLocation){
+            location.hover = false;
+        }
+    }
+}
+
+struct colorLocation colorHoverIndex(){
+    int viewportOffset = maxScreenWidth - MENUWIDTH;
+    clearColorHover();
+    colorLocation location;
+
+    for (int n = 0; n < colorLocations.size(); n++) {
+        for (int m = 0; m < colorLocations[n].size(); m++) {
+            if ((viewportOffset + colorLocations[n][m].x1 <= mouseLocation.x && mouseLocation.x <= viewportOffset + colorLocations[n][m].x2) &&
+                (colorLocations[n][m].y1 <= mouseLocation.y && mouseLocation.y <= colorLocations[n][m].y2)) {
+                location.n = n;
+                location.m = m;
+                return location;
+            }
+        }
+    }
+    return location;
+}
+
+void mouseEvents(){
+    try {
+        // Menu screen region
+        if (mouseLocation.x > (maxScreenWidth - MENUWIDTH)) {
+            // Hover
+            if (!mouseLocation.clicked) {
+                spdlog::info("RIGHT");
+
+                // Hover icons
+                int iconIndex = iconHoverIndex();
+                if (iconIndex >= 0) {
+                    spdlog::info("{}", iconIndex);
+                    iconLocations[iconIndex].hover = true;
+                    redrawMenu();
+                }
+
+                // Hover colors
+                struct colorLocation colorIndex = colorHoverIndex();
+                spdlog::info("{}, {}", colorIndex.n, colorIndex.m);
+                if (colorIndex.n >= 0 || colorIndex.m >= 0) {
+                    if (colorIndex.n < 0) {
+                        colorIndex.n = 0;
+                    }
+                    colorLocations[colorIndex.n][colorIndex.m].hover = true;
+                    SDL_Rect fillRect = {
+                            colorLocations[colorIndex.n][colorIndex.m].x1,
+                            colorLocations[colorIndex.n][colorIndex.m].y1,
+                            colorLocations[colorIndex.n][colorIndex.m].x2 -
+                            colorLocations[colorIndex.n][colorIndex.m].x1,
+                            colorLocations[colorIndex.n][colorIndex.m].y2 -
+                            colorLocations[colorIndex.n][colorIndex.m].y1
+                    };
+
+                    // Hover
+                    SDL_SetRenderDrawColor(mainRender, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                    SDL_RenderDrawRect(mainRender, &fillRect);
+                    redrawMenu();
+                }
+            }
+//            if (mouseLocation.clicked){
+//                    // Click events
+//                    if (iconIndex >= 0) {
+//                        switch (iconIndex) {
+//                            case 0:
+//                                if (pixelSize <= 200) {
+//                                    pixelSize += 1;
+//                                }
+//                                break;
+//                            case 1:
+//                                if (pixelSize >= 2) {
+//                                    pixelSize -= 1;
+//                                }
+//                                break;
+//                            case 2:
+//                                showGrid = true;
+//                                break;
+//                            case 3:
+//                                showGrid = false;
+//                                break;
+//                            case 8:
+//                                ink = true;
+//                                iconLocations[8].selected = true;
+//                                iconLocations[9].selected = false;
+//                                break;
+//                            case 9:
+//                                ink = false;
+//                                iconLocations[8].selected = false;
+//                                iconLocations[9].selected = true;
+//                                break;
+//                            default:
+//                                break;
+//                        }
+//                    }
+//                    if (colorIndex.n >= 0 || colorIndex.m >= 0){
+//                        if (colorIndex.n < 0){
+//                            colorIndex.n = 0;
+//                        }
+//                        if (ink) {
+//                            selectedColors.ink = colorIndex.m;
+//                        }
+//                        else if (paper) {
+//                            selectedColors.paper = colorIndex.m;
+//                        }
+//                        selectedColors.bright = (bool) colorIndex.n;
+//                    }
+//                }
+//            }
+        }
+
+        // Main drawing region
+        else {
+            // Draw
+            if (mouseLocation.clicked) {
+                spdlog::info("LEFT");
+                // Clicked on main board
+                if (mouseLocation.x / pixelSize < pixels.size()) {
+                    auto attr_copy = attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8];
+                    if (ink) {
+                        pixels[mouseLocation.x / pixelSize][mouseLocation.y / pixelSize] = true;
+                        attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
+                                selectedColors.ink,
+                                attr_copy.paper,
+                                selectedColors.bright
+                        };
+                    } else {
+                        attributes[(mouseLocation.x / pixelSize) / 8][(mouseLocation.y / pixelSize) / 8] = {
+                                attr_copy.ink,
+                                selectedColors.paper,
+                                attr_copy.bright
+                        };
+                    }
+                }
+            }
+            else {
+
+            }
+        }
+    }
+    catch (std::exception &e){
+        spdlog::error("{}, {}", e.what(), SDL_GetError());
+    }
+}
+
+void resetAll(){
     ink = true;
 
-    mainGrid = {0, 0, maxScreenWidth - 130, maxScreenHeight};
-    mainMenu = {maxScreenWidth - 129, 0, 130, maxScreenHeight};
+    mainGrid = {0, 0, maxScreenWidth - MENUWIDTH, maxScreenHeight};
+    mainMenu = {maxScreenWidth - MENUWIDTH, 0, MENUWIDTH, maxScreenHeight};
 
     // 256x192 (1x1) pixels
     pixels = {256, std::vector<bool>(192,false)};
@@ -460,43 +513,47 @@ int main(int argc, char* args[]){
             SDL_Event e;
             SDL_ShowCursor(1);
 
-            reset();
+            resetAll();
 
             bool mainLoopRunning = true;
-
             while (mainLoopRunning) {
                 while (SDL_PollEvent(&e) != 0) {
-                    switch (e.type){
-                        case SDL_MOUSEMOTION:
-                            SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
-                            mouseEvents(1);
-                            break;
-                        case SDL_MOUSEBUTTONDOWN:
-                            mouseLocation.clicked = true;
-                            mouseEvents(0);
-                            break;
-                        case SDL_MOUSEBUTTONUP:
-                            mouseLocation.clicked = false;
-                            mouseEvents(2);
-                            break;
-                        case SDL_WINDOWEVENT:
-                            if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                                maxScreenWidth = e.window.data1;
-                                maxScreenHeight = e.window.data2;
-                                windowResized();
-                            }
-                            break;
-                        case SDL_KEYDOWN:
-                            spdlog::debug("key");
-                            break;
-                        case SDL_QUIT:
-                            spdlog::info("SDL exiting");
-                            mainLoopRunning = false;
-                            break;
+                    // TODO: Please revisit. Several optimizations possible!
+                    if (e.type == SDL_MOUSEBUTTONDOWN){
+                        mouseLocation.clicked = true;
+                        mouseEvents();
                     }
-                    redraw();
+
+                    else if (e.type == SDL_MOUSEBUTTONUP){
+                        mouseLocation.clicked = false;
+                    }
+
+                    else if (e.type == SDL_MOUSEMOTION){
+                        SDL_GetMouseState(&mouseLocation.x, &mouseLocation.y);
+                        mouseEvents();
+                    }
+
+                    else if (e.type == SDL_WINDOWEVENT) {
+                        if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+                            maxScreenWidth = e.window.data1;
+                            maxScreenHeight = e.window.data2;
+                            mainGrid = {0, 0, maxScreenWidth - MENUWIDTH, maxScreenHeight};
+                            mainMenu = {maxScreenWidth - MENUWIDTH, 0, MENUWIDTH, maxScreenHeight};
+//                            redraw();
+                        }
+                    }
+
+                    else if (e.type == SDL_KEYDOWN) {
+                        spdlog::debug("key");
+                    }
+
+                    else if (e.type == SDL_QUIT) {
+                        spdlog::info("SDL exiting");
+                        mainLoopRunning = false;
+                    }
                 }
-                SDL_Delay(10);
+                redraw();
+                SDL_Delay(1);
             }
         }
 

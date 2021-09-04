@@ -21,10 +21,10 @@ else
   echo "Unable to detect platform"
 fi
 
-conan install . --build=spdlog --build=fmt
+conan install . --build=missing
 
-mkdir cmake-build-minsizerel
-
-cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
-
-cmake --build . --target zxpaint -- -j 2
+#mkdir cmake-build-minsizerel
+#
+#cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
+#
+#cmake --build . --target zxpaint -- -j 2

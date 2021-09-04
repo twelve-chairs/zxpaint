@@ -1,0 +1,11 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '11.0'
+
+target 'zxpaint' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for zxpaint
+  pod 'fmt', '~> 6.2'
+  pod 'spdlog', '~> 1.6.1'
+end

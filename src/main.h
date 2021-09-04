@@ -18,6 +18,7 @@
 #include "../res/iconsright.xpm"
 #include "../res/iconsink.xpm"
 #include "../res/iconspaper.xpm"
+#include "StarFish.h"
 
 const auto icons = {
         &iconsin,
@@ -44,6 +45,7 @@ int attributeSize = pixelSize * 8;
 const int blockSize = 36;
 
 bool ink;
+bool paper;
 
 bool initSDL();
 void exitSDL();
@@ -52,6 +54,8 @@ SDL_Window *mainWindow = nullptr;
 SDL_Renderer *mainRender = nullptr;
 SDL_Rect mainGrid;
 SDL_Rect mainMenu;
+
+const int MENUWIDTH = 130;
 
 Uint64 startTick;
 Uint64 endTick;
@@ -83,6 +87,11 @@ struct objectLocation {
     int y2;
     bool hover;
     bool selected;
+};
+
+struct colorLocation {
+    int n = -1;
+    int m = -1;
 };
 
 attribute selectedColors;
