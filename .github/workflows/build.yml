@@ -36,12 +36,14 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
+        export CONAN_SYSREQUIRES_MODE=enabled
         sudo apt-get update
         sudo apt-get install -y build-essential git cmake curl pip libsdl2-image-dev libsdl2-ttf-dev
         pip install conan
     - name: Sonar Build Wrapper
       shell: bash
       run: |
+        export CONAN_SYSREQUIRES_MODE=enabled
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip -q build-wrapper-linux-x86.zip
         cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
