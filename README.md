@@ -1,7 +1,8 @@
 # ZX-Paint
 
 ![Build](https://github.com/twelvechairssoftware/zxpaint/workflows/Build/badge.svg)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=twelvechairssoftware_zxpaint&metric=alert_status)](https://sonarcloud.io/dashboard?id=twelvechairssoftware_zxpaint)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=twelve-chairs_zxpaint&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=twelve-chairs_zxpaint)
+
 ## Intro
 An open source project to simulate the Sinclair ZX Spectrum's screen drawing capabilities, in the style of a simple modern-ish image manipulation editor! Includes realistic pixel dimensions, and proper attribute-based colour schemes. Why? Simply because the [ZX Spectrum](https://en.wikipedia.org/wiki/ZX_Spectrum) is a unique monster from the 80s that has had such a massive impact on gaming, and demo scenes with its [quirky screen drawing capabilities](https://en.wikipedia.org/wiki/ZX_Spectrum_graphic_modes). Even more honestly - we just wanted to become more familiar with `SDL2` to enhance our skillset for future cross-platform game and simulation software, and just happen to be huge Speccy fans! This is no DPaint, but we hope that other Speccy enthusiasts will enjoy this, too 😊
 
