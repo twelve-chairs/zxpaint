@@ -9,26 +9,29 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake) # Custom findSDL2Image cmake
-
-#### Set up Conan and build dependencies #### https://github.com/conan-io/cmake-conan ##################################
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/v0.16.1/conan.cmake"
-            "${CMAKE_BINARY_DIR}/conan.cmake"
-            EXPECTED_HASH SHA256=396e16d0f5eabdc6a14afddbcfff62a54a7ee75c6da23f32f7a31bc85db23484
-            TLS_VERIFY ON)
-endif()
-
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-conan_cmake_configure(REQUIRES spdlog/1.9.2
-        sdl/2.0.16
-        GENERATORS cmake cmake_paths cmake_find_package)
-conan_cmake_autodetect(settings)
-conan_cmake_install(PATH_OR_REFERENCE .
-        BUILD missing
-        REMOTE conancenter
-        SETTINGS ${settings})
-########################################################################################################################
+#
+##### Set up Conan and build dependencies #### https://github.com/conan-io/cmake-conan ##################################
+#if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+#    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+#    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
+#            "${CMAKE_BINARY_DIR}/conan.cmake"
+#            TLS_VERIFY ON)
+#endif()
+#
+#include(${CMAKE_BINARY_DIR}/conan.cmake)
+#
+#conan_cmake_configure(REQUIRES
+#        spdlog/1.11.0
+##        sdl/2.26.1
+##                sdl_image/2.0.5
+#        GENERATORS CMakeToolchain CMakeDeps)
+#
+#conan_cmake_autodetect(settings)
+#conan_cmake_install(PATH_OR_REFERENCE .
+#        BUILD missing
+#        REMOTE conancenter
+#        SETTINGS ${settings})
+#########################################################################################################################
 
 find_package(spdlog REQUIRED)
 find_package(SDL2 REQUIRED)

@@ -277,7 +277,7 @@ void redraw(){
     SDL_RenderClear(mainRender);
     redrawMainScreen();
     redrawMenu();
-    drawStarFish();
+//    drawStarFish();
     SDL_RenderPresent(mainRender);
 }
 
