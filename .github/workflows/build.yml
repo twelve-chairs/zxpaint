@@ -37,7 +37,7 @@ jobs:
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
         run: |
           export CONAN_SYSREQUIRES_MODE=enabled
-          sudo apt-get install -y build-essential git cmake spdlog curl libsdl2-image-dev libsdl2-ttf-dev
+          sudo apt-get install -y build-essential git cmake libspdlog-dev curl libsdl2-image-dev libsdl2-ttf-dev
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
           cmake --build . --target zxpaint -- -j 2
 
