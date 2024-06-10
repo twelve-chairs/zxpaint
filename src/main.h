@@ -21,16 +21,16 @@
 #include "StarFish.h"
 
 const auto icons = {
-        &iconsin,
-        &iconsout,
-        &iconson,
-        &iconsoff,
-        &iconsup,
-        &iconsdown,
-        &iconsleft,
-        &iconsright,
-        &iconsink,
-        &iconspaper
+    &iconsin,
+    &iconsout,
+    &iconson,
+    &iconsoff,
+    &iconsup,
+    &iconsdown,
+    &iconsleft,
+    &iconsright,
+    &iconsink,
+    &iconspaper
 };
 // END: Include all images
 
@@ -63,35 +63,35 @@ const int SCREEN_FPS = 60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 struct {
-    int x;
-    int y;
-    bool clicked;
+  int x;
+  int y;
+  bool clicked;
 } mouseLocation;
 
 struct rgb {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
 };
 
 struct attribute {
-    uint8_t ink;
-    uint8_t paper;
-    bool bright;
+  uint8_t ink;
+  uint8_t paper;
+  bool bright;
 };
 
 struct objectLocation {
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-    bool hover;
-    bool selected;
+  int x1;
+  int y1;
+  int x2;
+  int y2;
+  bool hover;
+  bool selected;
 };
 
 struct colorLocation {
-    int n = -1;
-    int m = -1;
+  int n = -1;
+  int m = -1;
 };
 
 attribute selectedColors;

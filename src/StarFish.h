@@ -8,19 +8,19 @@
 #include "common.h"
 
 class StarFish {
-public:
-    StarFish();
-    virtual ~StarFish();
+ public:
+  StarFish();
+  virtual ~StarFish();
 
-    int x1;
-    int x2;
-    int y1;
-    int y2;
-    int lastUpdate;
-    int width;
-    int height;
+  int x1;
+  int x2;
+  int y1;
+  int y2;
+  int lastUpdate;
+  int width;
+  int height;
 
-    void animation(SDL_Renderer *parentRenderer, int, int, int, int);
+  void animation(SDL_Renderer *parentRenderer, int, int, int, int);
 };
 
 
