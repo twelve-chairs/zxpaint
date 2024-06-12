@@ -1,26 +1,25 @@
-name: Build
+name: Build Ubuntu
+
 on:
   push:
     branches:
       - master
+    paths:
+      - src/**
   schedule:
     - cron: '0 0 1 * *'
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
+  BUILD_TYPE: MinSizeRel
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
+      - uses: actions/checkout@v4
       - name: Packages
         shell: bash
         run: |
-          sudo apt-get install -y build-essential git cmake libspdlog-dev curl libsdl2-image-dev libsdl2-ttf-dev
+          sudo apt-get install -y build-essential cmake libspdlog-dev curl libsdl2-image-dev libsdl2-ttf-dev
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
           cmake --build . --target zxpaint -- -j 2
