@@ -3,26 +3,16 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    types: [opened, synchronize, reopened]
   schedule:
-    - cron: '41 7 * * 5'
+    - cron: '0 0 1 * *'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  BITRAY_KEY: ${{ secrets.BINTRAY_API_KEY }}
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,14 +20,7 @@ jobs:
 
       - name: Packages
         shell: bash
-        # Use a bash shell so we can use the same syntax for environment variable
-        # access regardless of the host operating system
-        # Note the current convention is to use the -S and -B options here to specify source
-        # and build directories, but this is only available with CMake 3.13 and higher.
-        # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
         run: |
-          export CONAN_SYSREQUIRES_MODE=enabled
           sudo apt-get install -y build-essential git cmake libspdlog-dev curl libsdl2-image-dev libsdl2-ttf-dev
           cmake -DCMAKE_BUILD_TYPE=MinSizeRel -G "CodeBlocks - Unix Makefiles" .
           cmake --build . --target zxpaint -- -j 2
-

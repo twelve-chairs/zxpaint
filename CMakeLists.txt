@@ -9,29 +9,6 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake) # Custom findSDL2Image cmake
-#
-##### Set up Conan and build dependencies #### https://github.com/conan-io/cmake-conan ##################################
-#if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-#    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-#    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
-#            "${CMAKE_BINARY_DIR}/conan.cmake"
-#            TLS_VERIFY ON)
-#endif()
-#
-#include(${CMAKE_BINARY_DIR}/conan.cmake)
-#
-#conan_cmake_configure(REQUIRES
-#        spdlog/1.11.0
-##        sdl/2.26.1
-##                sdl_image/2.0.5
-#        GENERATORS CMakeToolchain CMakeDeps)
-#
-#conan_cmake_autodetect(settings)
-#conan_cmake_install(PATH_OR_REFERENCE .
-#        BUILD missing
-#        REMOTE conancenter
-#        SETTINGS ${settings})
-#########################################################################################################################
 
 find_package(spdlog REQUIRED)
 find_package(SDL2 REQUIRED)
